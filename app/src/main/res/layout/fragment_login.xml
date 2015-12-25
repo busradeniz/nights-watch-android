@@ -1,0 +1,91 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="50dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:background="@color/colorPrimary">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="72dp"
+        android:layout_marginBottom="24dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/nav_icon"/>
+
+    <!-- Email Label -->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:theme="@style/TextInputLayoutTheme"
+      >
+        <EditText android:id="@+id/login_txt_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:textColor="@android:color/white"
+            android:hint="@string/txt_hint_username"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView android:id="@+id/login_txt_username_fail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="12dip"
+        android:text="Enter valid username"
+        android:visibility="invisible"
+        android:textColor="@android:color/holo_red_dark"/>
+
+    <!-- Password Label -->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:theme="@style/TextInputLayoutTheme">
+
+        <EditText android:id="@+id/login_txt_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:textColor="@android:color/white"
+            android:hint="@string/txt_hint_password"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView android:id="@+id/login_txt_password_fail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:textSize="12dip"
+        android:text="Enter valid password"
+        android:visibility="invisible"
+        android:textColor="@android:color/holo_red_dark"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/login_btn_login"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:padding="12dp"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@android:color/white"
+        android:text="@string/txt_login_button"/>
+
+    <TextView android:id="@+id/login_btn_signup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="@string/txt_new_account"
+        android:gravity="center"
+        android:textSize="16dip"
+        android:textColor="@android:color/white"/>
+
+</LinearLayout>
