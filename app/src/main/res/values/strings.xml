@@ -6,6 +6,8 @@
     <string name="txt_login_button">Login</string>
     <string name="txt_hint_username">Username</string>
     <string name="txt_hint_password">Password</string>
+    <string name="txt_hint_password_again">Confirm Password</string>
+    <string name="txt_forgot_password">Forgot password?</string>
 
     <string name="txt_signup_button">Sign up</string>
 
@@ -32,13 +34,16 @@
     <string name="change_password_new_password">New Password</string>
     <string name="change_password_old_password">Old Password</string>
 
-<!--Edit Profile screen string-->
+    <!--Edit Profile screen string-->
     <string name="edit_profile_txt_profile_img">Profile Photo</string>
     <string name="edit_profile_txt_fullname">Full Name</string>
     <string name="edit_profile_txt_username">Username</string>
     <string name="edit_profile_txt_email">Email</string>
     <string name="edit_profile_bio">Short Bio</string>
     <string name="edit_profile_btn_title">Submit</string>
+
+    <!--Reset Password screen string-->
+    <string name="reset_password_btn_title">Reset Password</string>
 
 
     <!--Photo option screen string-->
@@ -47,5 +52,6 @@
         <item>Choose from library</item>
     </string-array>
     <string name="photoOptionTitle">Select </string>
+    <string name="title_activity_reset_password">ResetPasswordActivity</string>
 
 </resources>

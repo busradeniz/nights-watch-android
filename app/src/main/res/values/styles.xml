@@ -44,7 +44,6 @@
     </style>
 
 
-
     <!-- Tab bar theme -->
     <style name="HomeTabLayoutTheme" parent="Widget.Design.TabLayout">
         <item name="tabTextAppearance">@style/HomeTabText</item>

@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:inputType="textCapWords"
             android:textColor="@android:color/white"
-            android:hint="Name" />
+            android:hint="@string/edit_profile_txt_username" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:textColor="@android:color/white"
-            android:hint="Email" />
+            android:hint="@string/edit_profile_txt_email" />
     </android.support.design.widget.TextInputLayout>
 
     <!-- Password Label -->
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:textColor="@android:color/white"
-            android:hint="Password"/>
+            android:hint="@string/txt_hint_password"/>
     </android.support.design.widget.TextInputLayout>
 
     <!-- Password Label -->
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:textColor="@android:color/white"
-            android:hint="Confirm Password"/>
+            android:hint="@string/txt_hint_password_again"/>
     </android.support.design.widget.TextInputLayout>
 
 
