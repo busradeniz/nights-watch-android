@@ -32,8 +32,20 @@
     <string name="change_password_new_password">New Password</string>
     <string name="change_password_old_password">Old Password</string>
 
+<!--Edit Profile screen string-->
+    <string name="edit_profile_txt_profile_img">Profile Photo</string>
+    <string name="edit_profile_txt_fullname">Full Name</string>
+    <string name="edit_profile_txt_username">Username</string>
+    <string name="edit_profile_txt_email">Email</string>
+    <string name="edit_profile_bio">Short Bio</string>
+    <string name="edit_profile_btn_title">Submit</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--Photo option screen string-->
+    <string-array name="photoOptionArray">
+        <item>Take Photo</item>
+        <item>Choose from library</item>
+    </string-array>
+    <string name="photoOptionTitle">Select </string>
 
 </resources>

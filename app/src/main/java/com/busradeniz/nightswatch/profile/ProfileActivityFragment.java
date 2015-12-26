@@ -40,6 +40,7 @@ public class ProfileActivityFragment extends Fragment {
     @Bind(R.id.profile_txt_bio_title) TextView profile_txt_bio_title;
     @Bind(R.id.profile_txt_bio) TextView profile_txt_bio;
     @Bind(R.id.profile_btn_change_password) AppCompatButton profile_btn_change_password;
+    @Bind(R.id.profile_btn_edit_profile) AppCompatButton profile_btn_edit_profile;
 
 
     public ProfileActivityFragment() {
@@ -78,6 +79,12 @@ public class ProfileActivityFragment extends Fragment {
             }
         });
 
+        profile_btn_edit_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditProfileScreen();
+            }
+        });
 
         return view;
     }
@@ -85,15 +92,22 @@ public class ProfileActivityFragment extends Fragment {
 
     private void openChangePasswordScreen(){
         ChangePasswordFragment changePasswordFragment = new ChangePasswordFragment();
+        openFragment(changePasswordFragment);
+    }
 
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.baseFrameContainer, changePasswordFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+    private void openEditProfileScreen(){
+        EditProfileFragment editProfileFragment = new EditProfileFragment();
+        openFragment(editProfileFragment);
+
     }
 
 
-
+    private void openFragment(Fragment fragment){
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.baseFrameContainer, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 
 
 

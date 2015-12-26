@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -97,46 +98,31 @@ public class HomeActivity extends AppCompatActivity {
 
     private void openHomeScreen(){
         HomeActivityFragment homeActivityFragment = new HomeActivityFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.baseFrameContainer, homeActivityFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        openFragment(homeActivityFragment);
     }
 
     private void openStatisticsScreen() {
         StatisticsActivityFragment statisticsActivityFragment = new StatisticsActivityFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.baseFrameContainer, statisticsActivityFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        openFragment(statisticsActivityFragment);
 
 
     }
 
     private void openProfileScreen() {
         ProfileActivityFragment profileActivityFragment = new ProfileActivityFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.baseFrameContainer, profileActivityFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        openFragment(profileActivityFragment);
 
     }
 
     private void openHistoryScreen() {
         HistoryActivityFragment historyActivityFragment = new HistoryActivityFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.baseFrameContainer, historyActivityFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+       openFragment(historyActivityFragment);
 
     }
 
     private void openWatchListScreen() {
         WatchListActivityFragment watchListActivityFragment = new WatchListActivityFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.baseFrameContainer, watchListActivityFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        openFragment(watchListActivityFragment);
     }
 
     @Override
@@ -147,6 +133,13 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+
+    private void openFragment(Fragment fragment){
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.baseFrameContainer, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 
 
 }
