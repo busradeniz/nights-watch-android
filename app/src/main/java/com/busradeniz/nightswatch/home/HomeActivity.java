@@ -49,18 +49,7 @@ public class HomeActivity extends AppCompatActivity {
        openHomeScreen();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_home, menu);
-//        // Retrieve the SearchView and plug it into SearchManager
-//        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-//        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//        return true;
-//    }
-//
-//
-//    @Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -122,7 +111,6 @@ public class HomeActivity extends AppCompatActivity {
     private void openProfileScreen() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         ProfileActivityFragment profileActivityFragment = new ProfileActivityFragment();
-        profileActivityFragment.setDrawlerActionProvider(mDrawerLayout);
         fragmentManager.beginTransaction().replace(R.id.baseFrameContainer, profileActivityFragment).commit();
 
     }

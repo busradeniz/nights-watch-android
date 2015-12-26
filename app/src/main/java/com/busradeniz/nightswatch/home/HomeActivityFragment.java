@@ -41,8 +41,7 @@ public class HomeActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view =  inflater.inflate(R.layout.fragment_home, container, false);
-
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
 
         // Set up the toolbar.
@@ -75,6 +74,7 @@ public class HomeActivityFragment extends Fragment {
         });
 
 
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -88,8 +88,6 @@ public class HomeActivityFragment extends Fragment {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
         super.onCreateOptionsMenu(menu, inflater);
-
-
 
     }
 

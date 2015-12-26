@@ -21,6 +21,14 @@
     <string name="title_activity_statistics">StatisticsActivity</string>
     <string name="title_activity_watch_list">WatchListActivity</string>
 
+
+
+    <string name="profile_txt_change_password">Change Password</string>
+    <string name="profile_txt_logout">Logout</string>
+    <string name="profile_txt_edit_rpofile">Edit Profile</string>
+
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
