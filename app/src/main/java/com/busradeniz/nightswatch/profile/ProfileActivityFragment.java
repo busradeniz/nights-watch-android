@@ -2,9 +2,12 @@ package com.busradeniz.nightswatch.profile;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +39,7 @@ public class ProfileActivityFragment extends Fragment {
     @Bind(R.id.profile_txt_email) TextView profile_txt_email;
     @Bind(R.id.profile_txt_bio_title) TextView profile_txt_bio_title;
     @Bind(R.id.profile_txt_bio) TextView profile_txt_bio;
-
+    @Bind(R.id.profile_btn_change_password) AppCompatButton profile_btn_change_password;
 
 
     public ProfileActivityFragment() {
@@ -50,7 +53,6 @@ public class ProfileActivityFragment extends Fragment {
         ButterKnife.bind(this,view);
 
         // Set up the toolbar.
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
@@ -68,8 +70,33 @@ public class ProfileActivityFragment extends Fragment {
         profile_txt_bio_title.setText("About");
         profile_txt_bio.setText("Busra Deniz is a Software Engineer who has a keen interest in developing high-quality software by applying agile principles and methodologies, especially Scrum. She is a Certificated Scrum Master and mobile engineer in Netas. Currently, working on an international project that provides iOS and Android SDKs those allow other programmers to develop their applications, which are capable of voice call, video call and IM using WebRTC.");
 
+
+        profile_btn_change_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openChangePasswordScreen();
+            }
+        });
+
+
         return view;
     }
+
+
+    private void openChangePasswordScreen(){
+        ChangePasswordFragment changePasswordFragment = new ChangePasswordFragment();
+
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.baseFrameContainer, changePasswordFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+
+
+
+
+
 
 
 

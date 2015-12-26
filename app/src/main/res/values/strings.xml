@@ -22,11 +22,15 @@
     <string name="title_activity_watch_list">WatchListActivity</string>
 
 
-
+    <!--Profile screen strings-->
     <string name="profile_txt_change_password">Change Password</string>
     <string name="profile_txt_logout">Logout</string>
     <string name="profile_txt_edit_rpofile">Edit Profile</string>
 
+
+    <!--Change password screen strings -->
+    <string name="change_password_new_password">New Password</string>
+    <string name="change_password_old_password">Old Password</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

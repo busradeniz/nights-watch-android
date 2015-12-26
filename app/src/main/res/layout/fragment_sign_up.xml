@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:theme="@style/TextInputLayoutTheme">
+        android:theme="@style/WhiteTextInputLayoutTheme">
 
         <EditText android:id="@+id/signup_txt_username"
             android:layout_width="match_parent"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:theme="@style/TextInputLayoutTheme">
+        android:theme="@style/WhiteTextInputLayoutTheme">
 
         <EditText android:id="@+id/signup_txt_email"
             android:layout_width="match_parent"
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:theme="@style/TextInputLayoutTheme">
+        android:theme="@style/WhiteTextInputLayoutTheme">
         <EditText android:id="@+id/signup_txt_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:theme="@style/TextInputLayoutTheme">
+        android:theme="@style/WhiteTextInputLayoutTheme">
 
         <EditText android:id="@+id/signup_txt_password_again"
             android:layout_width="match_parent"

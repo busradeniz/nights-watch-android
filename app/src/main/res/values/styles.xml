@@ -25,13 +25,24 @@
 
 
     <!-- TextView theme-->
-    <style name="TextInputLayoutTheme" parent="TextAppearance.AppCompat">
+    <style name="WhiteTextInputLayoutTheme" parent="TextAppearance.AppCompat">
         //hint color And Label Color in False State
         <item name="android:textColorHint">@android:color/white</item>
         <item name="android:textSize">16sp</item>
         <item name="colorControlNormal">@android:color/white</item>
         <item name="colorControlActivated">@color/colorLightGray</item>
     </style>
+
+    <!-- TextView theme-->
+    <style name="BlueTextInputLayoutTheme" parent="TextAppearance.AppCompat">
+        //hint color And Label Color in False State
+        <item name="android:textColorHint">@color/colorDarkGray</item>
+        <item name="android:textSize">16sp</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorDarkGray</item>
+    </style>
+
 
 
     <!-- Tab bar theme -->

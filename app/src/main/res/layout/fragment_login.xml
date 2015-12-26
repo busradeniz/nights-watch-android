@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:theme="@style/TextInputLayoutTheme"
+        android:theme="@style/WhiteTextInputLayoutTheme"
       >
         <EditText android:id="@+id/login_txt_username"
             android:layout_width="match_parent"
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:theme="@style/TextInputLayoutTheme">
+        android:theme="@style/WhiteTextInputLayoutTheme">
 
         <EditText android:id="@+id/login_txt_password"
             android:layout_width="match_parent"
