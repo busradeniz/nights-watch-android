@@ -1,6 +1,7 @@
 package com.busradeniz.nightswatch.util;
 
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.Context;
 
 import retrofit.Retrofit;
@@ -12,8 +13,7 @@ public class NightsWatchApplication extends Application {
 
     public static Context context;
     public static String token;
-
-
+    public static int userId;
 
 
 }

@@ -1,5 +1,7 @@
 package com.busradeniz.nightswatch.service.signup;
 
+import com.busradeniz.nightswatch.service.media.Photo;
+
 /**
  * Created by busradeniz on 27/12/15.
  */

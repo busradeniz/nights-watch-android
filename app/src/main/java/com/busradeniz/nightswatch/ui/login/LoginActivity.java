@@ -1,6 +1,7 @@
 package com.busradeniz.nightswatch.ui.login;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.busradeniz.nightswatch.R;
@@ -16,4 +17,8 @@ public class LoginActivity extends AppCompatActivity {
         NightsWatchApplication.context = this;
     }
 
+    @Override
+    public void onBackPressed(){
+
+    }
 }

@@ -19,14 +19,21 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.busradeniz.nightswatch.R;
+import com.busradeniz.nightswatch.service.ServiceProvider;
+import com.busradeniz.nightswatch.service.signup.SignUpRequest;
+import com.busradeniz.nightswatch.service.signup.SignUpResponse;
 import com.busradeniz.nightswatch.util.CircleTransformation;
 import com.busradeniz.nightswatch.util.Constants;
+import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by busradeniz on 25/12/15.
@@ -80,9 +87,50 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
+        edit_profile_btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateUserInfo();
+            }
+        });
         return view;
     }
 
+    private void updateUserInfo(){
+        //TODO validation
+
+        sendUpdateUserInfoRequest();
+    }
+
+    private void sendUpdateUserInfoRequest(){
+        SignUpResponse signUpRequest = new SignUpResponse();
+        signUpRequest.setBio("asfoaj agiasjkg asgak");
+        signUpRequest.setBirthday("12.12.1989");
+        signUpRequest.setEmail("busradeniz89@gmail.com");
+        signUpRequest.setFullName("Busra Deniz");
+        signUpRequest.setGenderTypeDto("FEMALE");
+        signUpRequest.setUsername("test");
+        signUpRequest.setId(1);
+        ServiceProvider.getUserService().updateUserInfo(NightsWatchApplication.userId , signUpRequest)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<SignUpResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //TODO hata mesajı
+                    }
+
+                    @Override
+                    public void onNext(SignUpResponse signUpResponse) {
+
+                    }
+                });
+    }
     private void openOptionMenu() {
 
 

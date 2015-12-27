@@ -1,5 +1,6 @@
 package com.busradeniz.nightswatch.ui.home;
 
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,7 +21,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.busradeniz.nightswatch.R;
+import com.busradeniz.nightswatch.service.ServiceProvider;
+import com.busradeniz.nightswatch.service.signup.SignUpResponse;
+import com.busradeniz.nightswatch.service.violation.Violation;
 import com.busradeniz.nightswatch.ui.violationlist.ViolationListFragment;
+
+import java.util.List;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 
 /**
@@ -27,7 +38,8 @@ import com.busradeniz.nightswatch.ui.violationlist.ViolationListFragment;
  */
 public class HomeActivityFragment extends Fragment {
 
-
+    private static String TAG = "HomeActivityFragment";
+    private ProgressDialog progressDialog;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private Toolbar toolbar;
@@ -73,7 +85,6 @@ public class HomeActivityFragment extends Fragment {
             }
         });
 
-
         setHasOptionsMenu(true);
         return view;
     }
@@ -91,12 +102,11 @@ public class HomeActivityFragment extends Fragment {
 
     }
 
-
     private void setupViewPager(ViewPager viewPager) {
         HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new ViolationListFragment(), "Recent");
-        adapter.addFragment(new ViolationListFragment(), "Nearby");
-        adapter.addFragment(new ViolationListFragment(), "Top");
+        adapter.addFragment(new ViolationListFragment(getString(R.string.home_page_recent_text)), getString(R.string.home_page_recent_text));
+        adapter.addFragment(new ViolationListFragment(getString(R.string.home_page_nearby_text)), getString(R.string.home_page_nearby_text));
+        adapter.addFragment(new ViolationListFragment(getString(R.string.home_page_top_text)), getString(R.string.home_page_top_text));
         viewPager.setAdapter(adapter);
     }
 

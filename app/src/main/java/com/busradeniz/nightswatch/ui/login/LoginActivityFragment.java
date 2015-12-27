@@ -1,5 +1,6 @@
 package com.busradeniz.nightswatch.ui.login;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,23 +37,32 @@ import rx.schedulers.Schedulers;
 public class LoginActivityFragment extends Fragment {
 
 
-    @Bind(R.id.login_txt_username) EditText login_txt_username;
-    @Bind(R.id.login_txt_password) EditText login_txt_password;
-    @Bind(R.id.login_btn_login) AppCompatButton login_btn_login;
-    @Bind(R.id.login_btn_signup) TextView login_btn_signup;
-    @Bind(R.id.login_txt_username_fail) TextView login_txt_username_fail;
-    @Bind(R.id.login_txt_password_fail) TextView login_txt_password_fail;
-    @Bind(R.id.login_forgot_password) TextView login_forgot_password;
+    @Bind(R.id.login_txt_username)
+    EditText login_txt_username;
+    @Bind(R.id.login_txt_password)
+    EditText login_txt_password;
+    @Bind(R.id.login_btn_login)
+    AppCompatButton login_btn_login;
+    @Bind(R.id.login_btn_signup)
+    TextView login_btn_signup;
+    @Bind(R.id.login_txt_username_fail)
+    TextView login_txt_username_fail;
+    @Bind(R.id.login_txt_password_fail)
+    TextView login_txt_password_fail;
+    @Bind(R.id.login_forgot_password)
+    TextView login_forgot_password;
 
+    private ProgressDialog progressDialog;
 
-    public LoginActivityFragment() {}
+    public LoginActivityFragment() {
+    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_login, container, false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        ButterKnife.bind(this, view);
 
         login_btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,19 +101,22 @@ public class LoginActivityFragment extends Fragment {
             }
         });
 
+
+        login_txt_password.setText("12345");
+        login_txt_username.setText("test");
         return view;
     }
 
 
-    private void login(){
-        if (!validate()){
-           return;
+    private void login() {
+        if (!validate()) {
+            return;
         }
         sendLoginRequest();
     }
 
-    private void sendLoginRequest(){
-
+    private void sendLoginRequest() {
+        showProgress();
         final LoginRequest loginRequest = new LoginRequest(login_txt_username.getText().toString(), login_txt_password.getText().toString());
         ServiceProvider.getLoginService().signin(loginRequest)
                 .subscribeOn(Schedulers.newThread())
@@ -116,59 +129,64 @@ public class LoginActivityFragment extends Fragment {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.i("LOGIN" , "login failed :" + e.getLocalizedMessage());
+                        progressDialog.dismiss();
+                        Log.i("LOGIN", "login failed :" + e.getLocalizedMessage());
                     }
 
                     @Override
                     public void onNext(LoginResponse loginResponse) {
+                        progressDialog.dismiss();
                         SharedPreferences preferences = getActivity().getSharedPreferences(Constants.APP_NAME, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = preferences.edit();
                         //TODO  add remember me
-                        editor.putInt("userId" , loginResponse.getUserId());
+                        editor.putInt("userId", loginResponse.getUserId());
                         editor.commit();
                         NightsWatchApplication.token = loginResponse.getToken();
+                        NightsWatchApplication.userId = loginResponse.getUserId();
                         openHomeScreen();
                     }
                 });
     }
 
-    private boolean validate(){
-        boolean valid = true;
+    private boolean validate() {
 
         String username = login_txt_username.getText().toString();
         String password = login_txt_password.getText().toString();
 
-        if (username.isEmpty()){
+        if (username.isEmpty()) {
             login_txt_username_fail.setText("Enter valid username");
             login_txt_username_fail.setVisibility(View.VISIBLE);
-            valid = false;
-
+            return false;
         }
 
-        if (password.isEmpty() || password.length() < 2){
+        if (password.length() < Constants.PASSWORD_LENGTH) {
             login_txt_password_fail.setText("Enter valid password");
             login_txt_password_fail.setVisibility(View.VISIBLE);
-            valid = false;
+            return false;
         }
 
 
-        return valid;
+        return true;
 
     }
 
-    private void openSignUpScreen(){
+    private void openSignUpScreen() {
         Intent intent = new Intent(getActivity(), SignUpActivity.class);
         startActivity(intent);
     }
 
-    private void openHomeScreen(){
+    private void openHomeScreen() {
         Intent intent = new Intent(getActivity(), HomeActivity.class);
         startActivity(intent);
     }
 
-    private void openForgotPasswordScreen(){
+    private void openForgotPasswordScreen() {
         Intent intent = new Intent(getActivity(), ResetPasswordActivity.class);
         startActivity(intent);
+    }
+
+    private void showProgress() {
+        progressDialog = ProgressDialog.show(getActivity(), getResources().getString(R.string.progress_title_text), getResources().getString(R.string.progress_message_text), true);
     }
 
 }

@@ -50,7 +50,6 @@
                 android:layout_height="15dp"
                 android:layout_gravity="top"
                 android:layout_marginLeft="2dp"
-                android:text="/ 15 Haziran 2015 08:45"
                 android:textColor="@color/colorDarkGray"
                 android:textSize="11sp" />
 

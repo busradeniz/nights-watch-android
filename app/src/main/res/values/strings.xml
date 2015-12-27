@@ -54,4 +54,19 @@
     <string name="photoOptionTitle">Select </string>
     <string name="title_activity_reset_password">ResetPasswordActivity</string>
 
+
+
+    <!--Progress Dialog messages strings-->
+    <string name="progress_title_text">Please Wait</string>
+    <string name="progress_message_text">Loading...</string>
+
+
+
+
+    <!--Home page view pager tab string-->
+    <string name="home_page_recent_text">Recent</string>
+    <string name="home_page_nearby_text">Nearby</string>
+    <string name="home_page_top_text">Top</string>
+
+
 </resources>

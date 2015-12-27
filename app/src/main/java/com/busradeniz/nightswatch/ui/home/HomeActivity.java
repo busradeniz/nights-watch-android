@@ -57,6 +57,13 @@ public class HomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed(){
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 1) {
+            fm.popBackStack();
+        }
+    }
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
@@ -99,8 +106,6 @@ public class HomeActivity extends AppCompatActivity {
     private void openStatisticsScreen() {
         StatisticsActivityFragment statisticsActivityFragment = new StatisticsActivityFragment();
         openFragment(statisticsActivityFragment);
-
-
     }
 
     private void openProfileScreen() {
@@ -119,15 +124,6 @@ public class HomeActivity extends AppCompatActivity {
         WatchListActivityFragment watchListActivityFragment = new WatchListActivityFragment();
         openFragment(watchListActivityFragment);
     }
-
-    @Override
-    public void onBackPressed(){
-        FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 1) {
-            fm.popBackStack();
-        }
-    }
-
 
     private void openFragment(Fragment fragment){
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

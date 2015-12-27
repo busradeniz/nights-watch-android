@@ -1,4 +1,4 @@
-package com.busradeniz.nightswatch.service.signup;
+package com.busradeniz.nightswatch.service.media;
 
 /**
  * Created by busradeniz on 27/12/15.
