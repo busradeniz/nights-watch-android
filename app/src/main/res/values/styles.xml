@@ -59,4 +59,9 @@
     </style>
 
 
+    <!--Create violation spinner-->
+    <style name="CreateViolationSpinnerTheme" parent="Widget.AppCompat.Spinner">
+        <item name="android:spinnerItemStyle">@style/Widget.AppCompat.Spinner.DropDown</item>
+    </style>
+
 </resources>

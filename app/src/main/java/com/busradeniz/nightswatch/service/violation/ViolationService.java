@@ -29,8 +29,9 @@ public interface ViolationService {
     Observable<List<Violation>> getUserViolations();
 
     @GET("/nights-watch/violation/top20/watched")
-    Observable<List<Violation>> getUserWatchedViolations();
+    Observable<List<Violation>> getUserWatchedViolations(@Query("violationStatus") String violationStatus);
 
-
+    @GET("/nights-watch/violationGroup")
+    Observable<List<ViolationGroup>> getViolationGroups();
 
 }

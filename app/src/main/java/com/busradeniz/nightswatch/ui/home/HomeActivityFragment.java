@@ -3,6 +3,7 @@ package com.busradeniz.nightswatch.ui.home;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.ServiceProvider;
 import com.busradeniz.nightswatch.service.signup.SignUpResponse;
 import com.busradeniz.nightswatch.service.violation.Violation;
+import com.busradeniz.nightswatch.ui.violation.CreateViolationActivity;
 import com.busradeniz.nightswatch.ui.violationlist.ViolationListFragment;
 
 import java.util.List;
@@ -81,7 +83,7 @@ public class HomeActivityFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                openCreateViolationScreen();
             }
         });
 
@@ -103,11 +105,27 @@ public class HomeActivityFragment extends Fragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
+
+        ViolationListFragment recentViolationListFragment = new ViolationListFragment();
+        recentViolationListFragment.setListType(getString(R.string.home_page_recent_text));
+
+
+        ViolationListFragment nearbyViolationListFragment = new ViolationListFragment();
+        nearbyViolationListFragment.setListType(getString(R.string.home_page_nearby_text));
+
+        ViolationListFragment topViolationListFragment = new ViolationListFragment();
+        topViolationListFragment.setListType(getString(R.string.home_page_top_text));
+
+
         HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new ViolationListFragment(getString(R.string.home_page_recent_text)), getString(R.string.home_page_recent_text));
-        adapter.addFragment(new ViolationListFragment(getString(R.string.home_page_nearby_text)), getString(R.string.home_page_nearby_text));
-        adapter.addFragment(new ViolationListFragment(getString(R.string.home_page_top_text)), getString(R.string.home_page_top_text));
+        adapter.addFragment(recentViolationListFragment, getString(R.string.home_page_recent_text));
+        adapter.addFragment(nearbyViolationListFragment, getString(R.string.home_page_nearby_text));
+        adapter.addFragment(topViolationListFragment, getString(R.string.home_page_top_text));
         viewPager.setAdapter(adapter);
     }
 
+    private void openCreateViolationScreen(){
+        Intent intent = new Intent(getActivity(), CreateViolationActivity.class);
+        startActivity(intent);
+    }
 }

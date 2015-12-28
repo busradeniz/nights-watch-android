@@ -34,10 +34,13 @@ public class ViolationListFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
 
-    public ViolationListFragment(String violationListType) {
-        listType = violationListType;
+    public ViolationListFragment() {
+
     }
 
+    public void setListType(String violationListType){
+        listType = violationListType;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,19 +65,20 @@ public class ViolationListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //TODO correct this approach
-        sendRequest();
     }
 
-    private void sendRequest(){
+    private void sendRequest() {
         Log.i(TAG, "selectedListType : " + listType);
-        if (listType.equals(getString(R.string.home_page_recent_text))) {
-            sendGetRecentViolationListRequest();
-        } else if (listType.equals(getString(R.string.home_page_nearby_text))) {
-            sendGetNearbyViolationListRequest();
-        } else if (listType.equals(getString(R.string.home_page_top_text))) {
-            sendGetTopViolationListRequest();
+        if (listType != null){
+            if (listType.equals(getString(R.string.home_page_recent_text))) {
+                sendGetRecentViolationListRequest();
+            } else if (listType.equals(getString(R.string.home_page_nearby_text))) {
+                sendGetNearbyViolationListRequest();
+            } else if (listType.equals(getString(R.string.home_page_top_text))) {
+                sendGetTopViolationListRequest();
+            }
         }
+
     }
 
     private void sendGetNearbyViolationListRequest() {
@@ -157,10 +161,12 @@ public class ViolationListFragment extends Fragment {
 
     private void updateScreen(List<Violation> violations) {
 
+        if (mAdapter == null) {
             mAdapter = new ViolationListAdapter(violations);
             mRecyclerView.setAdapter(mAdapter);
-
-
+            return;
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     private void showProgress() {
