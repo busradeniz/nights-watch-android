@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -23,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,22 +33,33 @@ import android.widget.TextView;
 
 import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.ServiceProvider;
-import com.busradeniz.nightswatch.service.violation.Violation;
+import com.busradeniz.nightswatch.service.fileupload.Media;
+import com.busradeniz.nightswatch.service.violation.CreateViolationRequest;
 import com.busradeniz.nightswatch.service.violation.ViolationGroup;
+import com.busradeniz.nightswatch.service.violation.ViolationResponse;
+import com.busradeniz.nightswatch.util.AlertDialog;
+import com.busradeniz.nightswatch.util.MediaUtil;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.FuncN;
 import rx.schedulers.Schedulers;
 
 /**
@@ -54,13 +67,11 @@ import rx.schedulers.Schedulers;
  */
 public class CreateViolationActivityFragment extends Fragment {
 
-    private static final int PLACE_PICKER_REQUEST = 3;
+
     private static final int SELECT_PICTURE = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
+    private static final int PLACE_PICKER_REQUEST = 3;
     private static String TAG = "CreateViolationActivityFragment";
-
-    private Violation violation;
-
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -76,20 +87,29 @@ public class CreateViolationActivityFragment extends Fragment {
     ScrollView scrollBase;
     @Bind(R.id.llMediaBase)
     LinearLayout llMediaBase;
-
+    @Bind(R.id.create_violation_txt_title)
+    TextView create_violation_txt_title;
     @Bind(R.id.create_violation_txt_location)
     TextView create_violation_txt_location;
+    @Bind(R.id.create_violation_txt_desc)
+    TextView create_violation_txt_desc;
+    @Bind(R.id.create_violation_txt_tag)
+    TextView create_violation_txt_tag;
+    @Bind(R.id.create_violation_btn_submit)
+    AppCompatButton create_violation_btn_submit;
+
 
     private ArrayList<Uri> mediaListUri;
-    private ProgressDialog progressDialog;
     private List<ViolationGroup> violationGroupList;
     private String[] violationGroupSpinnerList;
-
+    private CreateViolationRequest violationRequest;
+    private String[] dangerLevelList;
+    private ProgressDialog progressDialog;
 
 
     public CreateViolationActivityFragment() {
         mediaListUri = new ArrayList<>();
-        violation = new Violation();
+        violationRequest = new CreateViolationRequest();
     }
 
     @Override
@@ -107,30 +127,54 @@ public class CreateViolationActivityFragment extends Fragment {
         setHasOptionsMenu(true);
 
 
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.danger_level_array,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.danger_level_array, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_violation_frequency.setAdapter(arrayAdapter);
         spinner_violation_danger.setAdapter(arrayAdapter);
-
-
-        create_violation_txt_location.setOnClickListener(new View.OnClickListener() {
+        spinner_violation_frequency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                try {
-                    PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-                    Intent intent = intentBuilder.build(getActivity().getApplicationContext());
-                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                violationRequest.setFrequencyLevel(dangerLevelList[position]);
+            }
 
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        spinner_violation_danger.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                violationRequest.setDangerLevel(dangerLevelList[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
 
-        sendGetViolationGroups();
+        dangerLevelList = getResources().getStringArray(R.array.danger_level_array);
+        violationRequest.setDangerLevel(dangerLevelList[0]);
+        violationRequest.setFrequencyLevel(dangerLevelList[0]);
+
+        create_violation_txt_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPlacePickerView();
+            }
+        });
+
+
+        create_violation_btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendUploadMediaRequests();
+            }
+        });
+        sendGetViolationGroupsRequest();
         return view;
     }
 
@@ -163,12 +207,14 @@ public class CreateViolationActivityFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
 
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            Uri imageUri = getImageUri(photo);
-            mediaListUri.add(imageUri);
-            Log.i(TAG, "Open camera - media List count :" + mediaListUri.size());
+            if (data != null && data.getExtras() != null) {
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                Uri imageUri = MediaUtil.getImageUri(getActivity(), photo);
+                mediaListUri.add(imageUri);
+                Log.i(TAG, "Open camera - media List count :" + mediaListUri.size());
 
-            setSelectedImagesView();
+                setSelectedImagesView();
+            }
 
         } else if (requestCode == SELECT_PICTURE) {
 
@@ -184,24 +230,10 @@ public class CreateViolationActivityFragment extends Fragment {
             }
 
             setSelectedImagesView();
-
-        }if (requestCode == PLACE_PICKER_REQUEST && resultCode == Activity.RESULT_OK) {
-
-            final Place place = PlacePicker.getPlace(data, getActivity());
-            final CharSequence name = place.getName();
-            final CharSequence address = place.getAddress();
-            String attributions = PlacePicker.getAttributions(data);
-            if (attributions == null) {
-                attributions = "";
-            }
-
-            create_violation_txt_location.setText(name.toString() + " " + address.toString());
-            Log.i("Adres " , "Adres : " + name + "---" + address + "---" + Html.fromHtml(attributions));
-            violation.setAddress(name.toString() + " " + address.toString());
-            violation.setLongitude(place.getLatLng().longitude);
-            violation.setLatitude(place.getLatLng().latitude);
-
-        }else {
+        }
+        if (requestCode == PLACE_PICKER_REQUEST && resultCode == Activity.RESULT_OK) {
+            setViolationLocation(data);
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -220,6 +252,19 @@ public class CreateViolationActivityFragment extends Fragment {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+    }
+
+    private void openPlacePickerView() {
+        try {
+            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+            Intent intent = intentBuilder.build(getActivity().getApplicationContext());
+            startActivityForResult(intent, PLACE_PICKER_REQUEST);
+
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setSelectedImagesView() {
@@ -247,13 +292,7 @@ public class CreateViolationActivityFragment extends Fragment {
 
     }
 
-    public Uri getImageUri(Bitmap inImage) {
-
-        String path = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
-
-    private void sendGetViolationGroups(){
+    private void sendGetViolationGroupsRequest() {
         showProgress();
         ServiceProvider.getViolationService().getViolationGroups()
                 .subscribeOn(Schedulers.newThread())
@@ -267,34 +306,212 @@ public class CreateViolationActivityFragment extends Fragment {
                     @Override
                     public void onError(Throwable e) {
                         progressDialog.dismiss();
-                        Log.i(TAG , "getViolationGroups reqest failed :" + e.getLocalizedMessage());
+                        Log.i(TAG, "getViolationGroups reqest failed :" + e.getLocalizedMessage());
                     }
 
                     @Override
                     public void onNext(List<ViolationGroup> violationGroups) {
                         progressDialog.dismiss();
-                        Log.i(TAG, "getViolationGroups request success - violation group size :" + violationGroups.size());
-                        updateViolationGroupSpinner(violationGroups);
+                        Log.i(TAG, "getViolationGroups request success - violationResponse group size :" + violationGroups.size());
+                        setViolationGroupSpinnerAdapter(violationGroups);
                     }
                 });
     }
 
-    private void updateViolationGroupSpinner(List<ViolationGroup> violationGroups){
-        violationGroupList = violationGroups;
+    private void setViolationGroupSpinnerAdapter(List<ViolationGroup> violationGroups) {
+        if (violationGroups.size() > 0) {
+            violationGroupList = violationGroups;
 
-        violationGroupSpinnerList = new String[violationGroupList.size()];
-        for (int i = 0 ; i< violationGroupList.size() ; i ++){
-            violationGroupSpinnerList[i] = violationGroupList.get(i).getName();
+            violationGroupSpinnerList = new String[violationGroupList.size()];
+            for (int i = 0; i < violationGroupList.size(); i++) {
+                violationGroupSpinnerList[i] = violationGroupList.get(i).getName();
+            }
+
+            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getActivity(), android.R.layout.simple_spinner_item, violationGroupSpinnerList);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner_violation_group.setAdapter(adapter);
+
+            spinner_violation_group.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    violationRequest.setViolationGroupName(violationGroupList.get(position).getName());
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            // set default 0
+            violationRequest.setViolationGroupName(violationGroupList.get(0).getName());
         }
-
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getActivity(),android.R.layout.simple_spinner_item,violationGroupSpinnerList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_violation_group.setAdapter(adapter);
-
-
     }
+
     private void showProgress() {
         progressDialog = ProgressDialog.show(getActivity(), getResources().getString(R.string.progress_title_text), getResources().getString(R.string.progress_message_text), true);
     }
 
+    private void setViolationLocation(Intent data) {
+        final Place place = PlacePicker.getPlace(data, getActivity());
+        final CharSequence name = place.getName();
+        final CharSequence address = place.getAddress();
+        String attributions = PlacePicker.getAttributions(data);
+        if (attributions == null) {
+            attributions = "";
+        }
+
+        create_violation_txt_location.setText(name.toString() + " " + address.toString());
+        Log.i(TAG, "Adress from place picket : " + name + "---" + address + "---" + Html.fromHtml(attributions));
+        violationRequest.setAddress(name.toString() + " " + address.toString());
+        violationRequest.setLongitude(place.getLatLng().longitude);
+        violationRequest.setLatitude(place.getLatLng().latitude);
+    }
+
+
+    private void sendUploadMediaRequests(){
+
+        if (!isValidate()){
+            AlertDialog.showAlertWithPositiveButton(getActivity(), "Warning !" , "Please fill fields that are marked with *");
+            return;
+        }
+
+        showProgress();
+        ArrayList<Observable<Media>> mediaObservables = new ArrayList<>();
+        for (int i = 0; i < mediaListUri.size(); i++) {
+
+            File file = new File(MediaUtil.getRealPathFromURI(getActivity(), mediaListUri.get(i)));
+            RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            HashMap<String, RequestBody> map = new HashMap<>();
+            map.put("file\"; filename=\"" + UUID.randomUUID().toString().replaceAll("-", "") + ".jpg", requestBody);
+
+            Observable<Media> observable = ServiceProvider.getFileUploadService().upload("IMAGE", map);
+            mediaObservables.add(observable);
+        }
+
+
+        Observable.combineLatest(mediaObservables, new FuncN<ArrayList<Media>>() {
+
+            @Override
+            public ArrayList<Media> call(Object... args) {
+                ArrayList<Media> medias = new ArrayList<>();
+                for (Object obje : args) {
+                    medias.add((Media) obje);
+                }
+                return medias;
+            }
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ArrayList<Media>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.i(TAG, "photo combine on completed");
+
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG, "photo combine least failed : " + e.getLocalizedMessage());
+                        progressDialog.dismiss();
+                        AlertDialog.showAlertWithPositiveButton(getActivity(),"Create Violation Failed !" , "An error occured while uploading medias, please try again !");
+                    }
+                    @Override
+                    public void onNext(ArrayList<Media> medias) {
+                        Log.i(TAG, "photo combine least success : " + medias.size());
+                        sendCreateViolationRequest(medias);
+                    }
+                });
+    }
+
+
+    private void sendCreateViolationRequest(final ArrayList<Media> medias) {
+        //prepare violationRequest
+        violationRequest.setTitle(create_violation_txt_title.getText().toString());
+        violationRequest.setViolationStatus("NEW");
+        if (create_violation_txt_desc.getText().toString().length() > 0) {
+            violationRequest.setDescription(create_violation_txt_desc.getText().toString());
+        }
+
+        if (create_violation_txt_tag.getText().toString().length() > 0) {
+            String[] tags = create_violation_txt_tag.getText().toString().split(",");
+            violationRequest.setTags(tags);
+        }
+
+        //send create violation requests
+        ServiceProvider.getViolationService().createNewViolation(violationRequest)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ViolationResponse>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.i(TAG, "createNewViolation onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG, "createNewViolation onError : " + e.getLocalizedMessage());
+                        progressDialog.dismiss();
+                        AlertDialog.showAlertWithPositiveButton(getActivity(),"Create Violation Failed !" , "An error occured while creating violation, please try again !");
+                    }
+
+                    @Override
+                    public void onNext(ViolationResponse violationResponse) {
+                        Log.i(TAG, "createNewViolation success");
+                        sendAddMediaToViolationRequest(medias , violationResponse.getId());
+                    }
+                });
+    }
+
+
+    private void sendAddMediaToViolationRequest(ArrayList<Media> medias , final int violationId){
+        ArrayList<Observable<ViolationResponse>> observables = new ArrayList<>();
+        for (int i = 0 ; i < medias.size() ; i++ ){
+            Observable<ViolationResponse> observable = ServiceProvider.getViolationService().addMediaToViolation(violationId,medias.get(i));
+            observables.add(observable);
+        }
+
+        Observable.combineLatest(observables, new FuncN<ArrayList<ViolationResponse>>() {
+
+            @Override
+            public ArrayList<ViolationResponse> call(Object... args) {
+                ArrayList<ViolationResponse> violations = new ArrayList<>();
+                for (Object obje : args) {
+                    violations.add((ViolationResponse) obje);
+                }
+                return violations;
+            }
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ArrayList<ViolationResponse>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.i(TAG, "photo combine on completed");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG, "photo combine onfailed : " + e.getLocalizedMessage());
+                        progressDialog.dismiss();
+                        AlertDialog.showAlertWithPositiveButton(getActivity(),"Create Violation Failed !" , "An error occured while uploading medias, please try again !");
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<ViolationResponse> violationResponses) {
+                        Log.i(TAG, "photo combine success : " + violationResponses.size());
+                        progressDialog.dismiss();
+                        AlertDialog.showAlertWithPositiveButton(getActivity(),"Create Violation Succeed!" , "Violation creates successfully");
+                    }
+                });
+    }
+
+    private boolean isValidate(){
+        if (create_violation_txt_title.getText().toString().length() > 0 && violationRequest.getLatitude() > 0
+                && violationRequest.getLongitude() > 0 && violationRequest.getAddress().length() > 0 && mediaListUri.size() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
+
 }
+

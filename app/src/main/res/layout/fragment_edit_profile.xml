@@ -30,7 +30,7 @@
             android:layout_marginTop="10dp"
             android:orientation="vertical">
 
-            <!--Profile photo-->
+            <!--Profile media-->
             <ImageView
                 android:id="@+id/edit_profile_img_user"
                 android:layout_width="100dp"

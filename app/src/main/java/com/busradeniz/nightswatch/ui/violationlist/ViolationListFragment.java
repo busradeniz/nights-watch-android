@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.ServiceProvider;
-import com.busradeniz.nightswatch.service.violation.Violation;
+import com.busradeniz.nightswatch.service.violation.ViolationResponse;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.busradeniz.nightswatch.util.SimpleDividerItemDecoration;
 
@@ -86,7 +86,7 @@ public class ViolationListFragment extends Fragment {
         ServiceProvider.getViolationService().getNearbyViolations(0, 0)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Violation>>() {
+                .subscribe(new Subscriber<List<ViolationResponse>>() {
                     @Override
                     public void onCompleted() {
 
@@ -99,10 +99,10 @@ public class ViolationListFragment extends Fragment {
                     }
 
                     @Override
-                    public void onNext(List<Violation> violations) {
+                    public void onNext(List<ViolationResponse> violationResponses) {
                         progressDialog.dismiss();
-                        Log.i(TAG, "getNearbyViolations request success : " + violations.size() + " violations ");
-                        updateScreen(violations);
+                        Log.i(TAG, "getNearbyViolations request success : " + violationResponses.size() + " violationResponses ");
+                        updateScreen(violationResponses);
                     }
                 });
     }
@@ -112,7 +112,7 @@ public class ViolationListFragment extends Fragment {
         ServiceProvider.getViolationService().getTopViolations()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Violation>>() {
+                .subscribe(new Subscriber<List<ViolationResponse>>() {
                     @Override
                     public void onCompleted() {
 
@@ -125,10 +125,10 @@ public class ViolationListFragment extends Fragment {
                     }
 
                     @Override
-                    public void onNext(List<Violation> violations) {
+                    public void onNext(List<ViolationResponse> violationResponses) {
                         progressDialog.dismiss();
-                        Log.i(TAG, "getTopViolations request success : " + violations.size() + " violations ");
-                        updateScreen(violations);
+                        Log.i(TAG, "getTopViolations request success : " + violationResponses.size() + " violationResponses ");
+                        updateScreen(violationResponses);
                     }
                 });
     }
@@ -138,7 +138,7 @@ public class ViolationListFragment extends Fragment {
         ServiceProvider.getViolationService().getNewestViolations()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Violation>>() {
+                .subscribe(new Subscriber<List<ViolationResponse>>() {
                     @Override
                     public void onCompleted() {
 
@@ -151,18 +151,18 @@ public class ViolationListFragment extends Fragment {
                     }
 
                     @Override
-                    public void onNext(List<Violation> violations) {
+                    public void onNext(List<ViolationResponse> violationResponses) {
                         progressDialog.dismiss();
-                        Log.i(TAG, "getNewestViolations request success : " + violations.size() + " violations ");
-                        updateScreen(violations);
+                        Log.i(TAG, "getNewestViolations request success : " + violationResponses.size() + " violationResponses ");
+                        updateScreen(violationResponses);
                     }
                 });
     }
 
-    private void updateScreen(List<Violation> violations) {
+    private void updateScreen(List<ViolationResponse> violationResponses) {
 
         if (mAdapter == null) {
-            mAdapter = new ViolationListAdapter(violations);
+            mAdapter = new ViolationListAdapter(violationResponses);
             mRecyclerView.setAdapter(mAdapter);
             return;
         }

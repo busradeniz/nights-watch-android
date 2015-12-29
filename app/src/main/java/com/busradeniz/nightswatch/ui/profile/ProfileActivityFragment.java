@@ -19,7 +19,6 @@ import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.ServiceProvider;
 import com.busradeniz.nightswatch.service.signup.SignUpResponse;
 import com.busradeniz.nightswatch.util.CircleTransformation;
-import com.busradeniz.nightswatch.util.Constants;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.squareup.picasso.Picasso;
 
@@ -120,7 +119,7 @@ public class ProfileActivityFragment extends Fragment {
         profile_txt_bio.setText(signUpResponse.getBio());
 
         Picasso.with(getActivity())
-                .load(signUpResponse.getPhoto().getUrl()).transform(new CircleTransformation()).into(profile_img_user);
+                .load(signUpResponse.getMedia().getUrl()).transform(new CircleTransformation()).into(profile_img_user);
     }
     private void openChangePasswordScreen(){
         ChangePasswordFragment changePasswordFragment = new ChangePasswordFragment();

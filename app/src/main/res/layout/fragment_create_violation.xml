@@ -34,7 +34,7 @@
             android:paddingRight="24dp"
             android:paddingTop="5dp">
 
-            <!-- Violation Type Label -->
+            <!-- ViolationResponse Type Label -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                 android:paddingTop="10dp"
                 android:spinnerMode="dropdown" />
 
-            <!-- Violation Title Label -->
+            <!-- ViolationResponse Title Label -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <!--Violation Location Label-->
+            <!--ViolationResponse Location Label-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,14 +104,13 @@
                     android:layout_marginRight="5dp"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
-                    android:text="Beşiktaş İstanbul"
                     android:textColor="@color/colorSecondaryText"
                     android:textSize="14sp" />
 
 
             </LinearLayout>
 
-            <!--Violation Level -->
+            <!--ViolationResponse Level -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -177,7 +176,7 @@
 
             </LinearLayout>
 
-            <!--Violation Tags -->
+            <!--ViolationResponse Tags -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -194,7 +193,7 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <!--Violation Description -->
+            <!--ViolationResponse Description -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -222,7 +221,7 @@
             </LinearLayout>
 
 
-            <!--Violation Medias-->
+            <!--ViolationResponse Medias-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

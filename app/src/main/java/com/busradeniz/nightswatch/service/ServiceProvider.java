@@ -1,5 +1,8 @@
 package com.busradeniz.nightswatch.service;
 
+import android.util.Log;
+
+import com.busradeniz.nightswatch.service.fileupload.FileUploadService;
 import com.busradeniz.nightswatch.service.login.LoginService;
 import com.busradeniz.nightswatch.service.signup.SignUpService;
 import com.busradeniz.nightswatch.service.user.UserService;
@@ -22,9 +25,6 @@ public class ServiceProvider {
 
     private static Retrofit retrofit;
     private static Retrofit retrofitInceptor;
-
-
-
 
     private static void initializeRetrofit() {
         if (retrofit == null) {
@@ -50,6 +50,7 @@ public class ServiceProvider {
                     Request original = chain.request();
                     Request request = null;
                     if (NightsWatchApplication.token != null){
+                        Log.i("Token" , NightsWatchApplication.token);
                         // Request customization: add request headers
                         Request.Builder requestBuilder = original.newBuilder()
                                 .header("Authorization", NightsWatchApplication.token)
@@ -90,6 +91,12 @@ public class ServiceProvider {
         initializeRetrofitWithInterceptor();
         return retrofitInceptor.create(ViolationService.class);
     }
+
+    public static FileUploadService getFileUploadService(){
+        initializeRetrofitWithInterceptor();
+        return retrofitInceptor.create(FileUploadService.class);
+    }
+
     public static void reset(){
         retrofit = null;
         retrofitInceptor = null;

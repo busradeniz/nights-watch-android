@@ -189,4 +189,7 @@ public class LoginActivityFragment extends Fragment {
         progressDialog = ProgressDialog.show(getActivity(), getResources().getString(R.string.progress_title_text), getResources().getString(R.string.progress_message_text), true);
     }
 
+    private void onRememberMeClicked(){
+
+    }
 }

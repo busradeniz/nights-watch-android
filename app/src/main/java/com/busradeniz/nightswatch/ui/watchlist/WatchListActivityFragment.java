@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.ServiceProvider;
-import com.busradeniz.nightswatch.service.violation.Violation;
+import com.busradeniz.nightswatch.service.violation.ViolationResponse;
 import com.busradeniz.nightswatch.ui.violationlist.ViolationListAdapter;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.busradeniz.nightswatch.util.SimpleDividerItemDecoration;
@@ -77,7 +77,7 @@ public class WatchListActivityFragment extends Fragment {
         ServiceProvider.getViolationService().getUserWatchedViolations(null)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Violation>>() {
+                .subscribe(new Subscriber<List<ViolationResponse>>() {
                     @Override
                     public void onCompleted() {
 
@@ -90,17 +90,17 @@ public class WatchListActivityFragment extends Fragment {
                     }
 
                     @Override
-                    public void onNext(List<Violation> violations) {
+                    public void onNext(List<ViolationResponse> violationResponses) {
                         progressDialog.dismiss();
-                        Log.i(TAG, "getUserWatchedViolations request success : " + violations.size() + " violations ");
-                        updateScreen(violations);
+                        Log.i(TAG, "getUserWatchedViolations request success : " + violationResponses.size() + " violationResponses ");
+                        updateScreen(violationResponses);
                     }
                 });
     }
 
-    private void updateScreen(List<Violation> violations) {
+    private void updateScreen(List<ViolationResponse> violationResponses) {
         if (mAdapter == null) {
-            mAdapter = new ViolationListAdapter(violations);
+            mAdapter = new ViolationListAdapter(violationResponses);
             watchlist_recycler_view.setAdapter(mAdapter);
         }
 

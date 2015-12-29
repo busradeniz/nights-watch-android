@@ -1,30 +1,13 @@
 package com.busradeniz.nightswatch.service.violation;
 
+import com.busradeniz.nightswatch.service.fileupload.Media;
+
+import java.util.List;
+
 /**
  * Created by busradeniz on 27/12/15.
  */
-public class Violation {
-    /*
-    *     "title": "Kaldırım taşı çok yüksek ! ",
-       "description": "Kaldırım taşı yüksek olduğu için sorun yaşıyorsunuz ",
-       "latitude": 0,
-       "longitude": 0,
-       "address": "Fatih / Istanbul",
-       "violationStatus": "NEW",
-       "dangerLevel": "LOW",
-       "frequencyLevel": "LOW",
-       "violationGroupName": "Test Violation Group",
-       "id": 1,
-       "violationDate": 1451208336602,
-       "owner": "test",
-       "tags": [],
-       "medias": [],
-       "userLikes": [],
-       "commentCount": 0,
-       "userLikeCount": 0,
-       "userWatchCount": 0
-       */
-
+public class ViolationResponse {
 
     private String title;
     private String description;
@@ -41,6 +24,9 @@ public class Violation {
     private int commentCount;
     private int userLikeCount;
     private int userWatchCount;
+    private List<String> tags;
+    private List<Media> medias;
+    private String customProperties;
 
 
     public String getTitle() {
@@ -161,5 +147,22 @@ public class Violation {
 
     public void setViolationStatus(String violationStatus) {
         this.violationStatus = violationStatus;
+    }
+
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public List<Media> getMedias() {
+        return medias;
+    }
+
+    public void setMedias(List<Media> medias) {
+        this.medias = medias;
     }
 }

@@ -8,16 +8,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.busradeniz.nightswatch.R;
-import com.busradeniz.nightswatch.service.violation.Violation;
+import com.busradeniz.nightswatch.service.violation.ViolationResponse;
 import com.busradeniz.nightswatch.util.CircleTransformation;
 import com.busradeniz.nightswatch.util.Constants;
 import com.busradeniz.nightswatch.util.DateFormatter;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.squareup.picasso.Picasso;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -28,7 +25,7 @@ import butterknife.ButterKnife;
 public class ViolationListAdapter extends RecyclerView.Adapter<ViolationListAdapter.ViewHolder> {
 
 
-    private List<Violation> violations;
+    private List<ViolationResponse> violationResponses;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -56,8 +53,8 @@ public class ViolationListAdapter extends RecyclerView.Adapter<ViolationListAdap
         }
     }
 
-    public ViolationListAdapter(List<Violation> list) {
-        violations = list;
+    public ViolationListAdapter(List<ViolationResponse> list) {
+        violationResponses = list;
     }
 
     @Override
@@ -74,14 +71,14 @@ public class ViolationListAdapter extends RecyclerView.Adapter<ViolationListAdap
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        Violation violation = violations.get(position);
-        holder.txtViolationTitle.setText(violation.getTitle());
-        holder.txtViolationType.setText(violation.getViolationGroupName());
-        holder.txtViolationLocation.setText(violation.getAddress());
-        holder.txtViolationDate.setText(" / " + DateFormatter.dateFormatToString(violation.getViolationDate()));
-        holder.txtViolationLikeNumber.setText(violation.getUserLikeCount()+"");
-        holder.txtViolationCommentNumber.setText(violation.getCommentCount() +"");
-        holder.txtViolationFollowerNumber.setText(violation.getUserWatchCount()+"");
+        ViolationResponse violationResponse = violationResponses.get(position);
+        holder.txtViolationTitle.setText(violationResponse.getTitle());
+        holder.txtViolationType.setText(violationResponse.getViolationGroupName());
+        holder.txtViolationLocation.setText(violationResponse.getAddress());
+        holder.txtViolationDate.setText(" / " + DateFormatter.dateFormatToString(violationResponse.getViolationDate()));
+        holder.txtViolationLikeNumber.setText(violationResponse.getUserLikeCount()+"");
+        holder.txtViolationCommentNumber.setText(violationResponse.getCommentCount() +"");
+        holder.txtViolationFollowerNumber.setText(violationResponse.getUserWatchCount()+"");
 
         Picasso.with(NightsWatchApplication.context)
                 .load(Constants.IMAGE_URL).transform(new CircleTransformation()).into(holder.imgViolationThumbnail);
@@ -91,7 +88,7 @@ public class ViolationListAdapter extends RecyclerView.Adapter<ViolationListAdap
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return violations.size();
+        return violationResponses.size();
     }
 
 

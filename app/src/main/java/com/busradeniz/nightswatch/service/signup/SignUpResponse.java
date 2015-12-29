@@ -1,6 +1,6 @@
 package com.busradeniz.nightswatch.service.signup;
 
-import com.busradeniz.nightswatch.service.media.Photo;
+import com.busradeniz.nightswatch.service.fileupload.Media;
 
 /**
  * Created by busradeniz on 27/12/15.
@@ -14,7 +14,7 @@ public class SignUpResponse {
     private String genderTypeDto;
     private int id;
     private String username;
-    private Photo photo;
+    private Media media;
 
 
     public String getBio() {
@@ -73,11 +73,11 @@ public class SignUpResponse {
         this.username = username;
     }
 
-    public Photo getPhoto() {
-        return photo;
+    public Media getMedia() {
+        return media;
     }
 
-    public void setPhoto(Photo photo) {
-        this.photo = photo;
+    public void setMedia(Media media) {
+        this.media = media;
     }
 }

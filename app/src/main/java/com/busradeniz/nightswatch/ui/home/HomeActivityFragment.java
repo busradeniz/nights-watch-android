@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,17 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.busradeniz.nightswatch.R;
-import com.busradeniz.nightswatch.service.ServiceProvider;
-import com.busradeniz.nightswatch.service.signup.SignUpResponse;
-import com.busradeniz.nightswatch.service.violation.Violation;
 import com.busradeniz.nightswatch.ui.violation.CreateViolationActivity;
 import com.busradeniz.nightswatch.ui.violationlist.ViolationListFragment;
-
-import java.util.List;
-
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 /**

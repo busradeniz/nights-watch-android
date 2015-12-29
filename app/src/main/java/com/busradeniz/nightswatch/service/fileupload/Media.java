@@ -1,9 +1,9 @@
-package com.busradeniz.nightswatch.service.media;
+package com.busradeniz.nightswatch.service.fileupload;
 
 /**
  * Created by busradeniz on 27/12/15.
  */
-public class Photo {
+public class Media {
     private String fileName;
     private int id;
     private String url;

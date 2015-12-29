@@ -4,6 +4,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="txt_new_account">No account yet? Create one</string>
     <string name="txt_login_button">Login</string>
+    <string name="txt_login__remember_me_button">Remember Me</string>
     <string name="txt_hint_username">Username</string>
     <string name="txt_hint_password">Password</string>
     <string name="txt_hint_password_again">Confirm Password</string>
@@ -46,7 +47,7 @@
     <string name="reset_password_btn_title">Reset Password</string>
 
 
-    <!--Photo option screen string-->
+    <!--Media option screen string-->
     <string-array name="photoOptionArray">
         <item>Take Photo</item>
         <item>Choose from library</item>
@@ -67,27 +68,27 @@
     <string name="title_activity_create_violation">CreateViolationActivity</string>
 
 
-    <!--Create Violation screen string-->
-    <string name="create_violation_screen_title">Create new violation</string>
-    <string name="create_violation_violation_type_title">Violation Type</string>
-    <string name="create_violation_txt_violation_title">Violation Title</string>
-    <string name="create_violation_violation_location_title">Violation Location</string>
+    <!--Create ViolationResponse screen string-->
+    <string name="create_violation_screen_title">Create new violationResponse</string>
+    <string name="create_violation_violation_type_title">Violation Type*</string>
+    <string name="create_violation_txt_violation_title">Violation Title*</string>
+    <string name="create_violation_violation_location_title">Violation Location*</string>
     <string name="create_violation_danger_level_title">Danger Level</string>
     <string name="create_violation_frequency_level_title">Frequency Level</string>
     <string name="create_violation_txt_violation_tag">Violation Tags</string>
     <string name="create_violation_txt_violation_description">Violation Description</string>
     <string name="create_violation_txt_submit">Create Violation</string>
-    <string name="create_violation_media_title">Violation Media</string>
+    <string name="create_violation_media_title">Violation Media*</string>
 
 
-    <!--Violation Location string-->
+    <!--ViolationResponse Location string-->
     <string name="location_violation_title">Select Location</string>
 
 
     <string-array name="danger_level_array">
-        <item>Low</item>
-        <item>Medium</item>
-        <item>High</item>
+        <item>LOW</item>
+        <item>MEDIUM</item>
+        <item>HIGH</item>
     </string-array>
     <string name="title_activity_map">MapActivity</string>
 

@@ -1,10 +1,12 @@
 package com.busradeniz.nightswatch.service.violation;
 
-import com.busradeniz.nightswatch.service.signup.SignUpResponse;
+import com.busradeniz.nightswatch.service.fileupload.Media;
 
 import java.util.List;
 
+import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import rx.Observable;
@@ -15,23 +17,30 @@ import rx.Observable;
 public interface ViolationService {
 
     @GET("/nights-watch/violation")
-    Observable<List<Violation>> getNearbyViolations(@Query("longitude") double longitude , @Query("latitude") double latitude);
+    Observable<List<ViolationResponse>> getNearbyViolations(@Query("longitude") double longitude , @Query("latitude") double latitude);
 
 
     @GET("/nights-watch/violation/top20/mostLiked")
-    Observable<List<Violation>> getTopViolations();
+    Observable<List<ViolationResponse>> getTopViolations();
 
 
     @GET("/nights-watch/violation/top20/newest")
-    Observable<List<Violation>> getNewestViolations();
+    Observable<List<ViolationResponse>> getNewestViolations();
 
     @GET("/nights-watch/violation/top20/owned")
-    Observable<List<Violation>> getUserViolations();
+    Observable<List<ViolationResponse>> getUserViolations();
 
     @GET("/nights-watch/violation/top20/watched")
-    Observable<List<Violation>> getUserWatchedViolations(@Query("violationStatus") String violationStatus);
+    Observable<List<ViolationResponse>> getUserWatchedViolations(@Query("violationStatus") String violationStatus);
 
     @GET("/nights-watch/violationGroup")
     Observable<List<ViolationGroup>> getViolationGroups();
+
+    @POST("/nights-watch/violation")
+    Observable<ViolationResponse> createNewViolation(@Body CreateViolationRequest createViolationRequest);
+
+    @POST("/nights-watch/violation/{id}/addMedia")
+    Observable<ViolationResponse> addMediaToViolation(@Path("id") int id, @Body Media media);
+
 
 }

@@ -59,7 +59,7 @@
     </style>
 
 
-    <!--Create violation spinner-->
+    <!--Create violationResponse spinner-->
     <style name="CreateViolationSpinnerTheme" parent="Widget.AppCompat.Spinner">
         <item name="android:spinnerItemStyle">@style/Widget.AppCompat.Spinner.DropDown</item>
     </style>
