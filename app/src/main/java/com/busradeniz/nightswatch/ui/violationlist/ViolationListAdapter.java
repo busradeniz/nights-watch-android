@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.busradeniz.nightswatch.util.DateFormatter;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -30,6 +32,7 @@ public class ViolationListAdapter extends ArrayAdapter<ViolationResponse> {
 
     private List<ViolationResponse> violationResponses;
     private Context context;
+    public List<ViolationResponse> orig;
 
 
     public ViolationListAdapter(Context context, List<ViolationResponse> values) {
@@ -93,5 +96,53 @@ public class ViolationListAdapter extends ArrayAdapter<ViolationResponse> {
         public TextView txtViolationCommentNumber;
         public TextView txtViolationFollowerNumber;
     }
+
+
+    public Filter getFilter() {
+        return new Filter() {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                final FilterResults oReturn = new FilterResults();
+                final ArrayList<ViolationResponse> results = new ArrayList<>();
+                if (orig == null)
+                    orig = violationResponses;
+                if (constraint != null) {
+                    if (orig != null && orig.size() > 0) {
+                        for (final ViolationResponse g : orig) {
+                            if (g.getTitle().toLowerCase().contains(constraint.toString()) || g.getAddress().toLowerCase().contains(constraint.toString()) || g.getViolationGroupName().toLowerCase().contains(constraint.toString()) )
+                                results.add(g);
+                        }
+                    }
+                    oReturn.values = results;
+                }
+                return oReturn;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint,Filter.FilterResults results) {
+                violationResponses = (List<ViolationResponse>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+    @Override
+    public int getCount() {
+        return violationResponses.size();
+    }
+
+    @Override
+    public ViolationResponse getItem(int position) {
+        return violationResponses.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+
 }
 

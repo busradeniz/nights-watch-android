@@ -89,22 +89,10 @@ public class HomeActivityFragment extends Fragment {
             }
         });
 
-        setHasOptionsMenu(true);
         return view;
     }
 
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_home, menu);
-
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-
-        super.onCreateOptionsMenu(menu, inflater);
-
-    }
 
 
     private void setupViewPager() {

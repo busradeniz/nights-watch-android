@@ -1,16 +1,26 @@
 package com.busradeniz.nightswatch.ui.violationlist;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.busradeniz.nightswatch.R;
@@ -21,6 +31,7 @@ import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.busradeniz.nightswatch.util.SimpleDividerItemDecoration;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.ButterKnife;
 import rx.Subscriber;
@@ -63,12 +74,45 @@ public class ViolationListFragment extends Fragment {
                 displayViolationDetail(violationResponseList.get(position));
             }
         });
+        violationListView.setTextFilterEnabled(true);
 
         sendRequest();
+        setHasOptionsMenu(true);
 
         return view;
     }
 
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_home, menu);
+
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText)) {
+                    violationListView.clearTextFilter();
+                } else {
+                    violationListView.setFilterText(newText);
+                }
+                return true;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
 
     @Override
     public void onResume() {
