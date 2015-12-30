@@ -57,8 +57,8 @@ public class HomeActivityFragment extends Fragment {
 
 
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-
+        viewPager.setOffscreenPageLimit(3);
+        setupViewPager();
 
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         tabLayout.post(new Runnable() {
@@ -94,17 +94,18 @@ public class HomeActivityFragment extends Fragment {
 
     }
 
-    private void setupViewPager(ViewPager viewPager) {
+
+    private void setupViewPager() {
 
         ViolationListFragment recentViolationListFragment = new ViolationListFragment();
-        recentViolationListFragment.setListType(getString(R.string.home_page_recent_text));
+        recentViolationListFragment.setListType(getString(R.string.home_page_recent_text),(HomeActivity) getActivity() );
 
 
         ViolationListFragment nearbyViolationListFragment = new ViolationListFragment();
-        nearbyViolationListFragment.setListType(getString(R.string.home_page_nearby_text));
+        nearbyViolationListFragment.setListType(getString(R.string.home_page_nearby_text),(HomeActivity) getActivity());
 
         ViolationListFragment topViolationListFragment = new ViolationListFragment();
-        topViolationListFragment.setListType(getString(R.string.home_page_top_text));
+        topViolationListFragment.setListType(getString(R.string.home_page_top_text),(HomeActivity) getActivity());
 
 
         HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(getChildFragmentManager());

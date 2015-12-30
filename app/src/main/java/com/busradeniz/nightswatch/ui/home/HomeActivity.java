@@ -1,5 +1,7 @@
 package com.busradeniz.nightswatch.ui.home;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -11,17 +13,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.TextView;
 
 import com.busradeniz.nightswatch.R;
+import com.busradeniz.nightswatch.service.violation.ViolationResponse;
 import com.busradeniz.nightswatch.ui.history.HistoryActivityFragment;
 import com.busradeniz.nightswatch.ui.profile.ProfileActivityFragment;
 import com.busradeniz.nightswatch.ui.statistics.StatisticsActivityFragment;
+import com.busradeniz.nightswatch.ui.violation.DisplayViolationFragment;
 import com.busradeniz.nightswatch.ui.watchlist.WatchListActivityFragment;
+import com.busradeniz.nightswatch.util.Constants;
 
 public class HomeActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
-    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +47,9 @@ public class HomeActivity extends AppCompatActivity {
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
-
+        SharedPreferences preferences = getSharedPreferences(Constants.APP_NAME, Context.MODE_PRIVATE);
+        TextView nav_view_txt = (TextView) findViewById(R.id.nav_view_txt);
+        nav_view_txt.setText(preferences.getString("username",""));
        openHomeScreen();
     }
 
@@ -132,5 +139,10 @@ public class HomeActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    public void openDisplayFragment(ViolationResponse violationResponse){
+        DisplayViolationFragment displayViolationFragment = new DisplayViolationFragment();
+        displayViolationFragment.setSelectedViolation(violationResponse);
+        openFragment(displayViolationFragment);
+    }
 
 }

@@ -69,7 +69,7 @@
 
 
     <!--Create ViolationResponse screen string-->
-    <string name="create_violation_screen_title">Create new violationResponse</string>
+    <string name="create_violation_screen_title">Create new violation</string>
     <string name="create_violation_violation_type_title">Violation Type*</string>
     <string name="create_violation_txt_violation_title">Violation Title*</string>
     <string name="create_violation_violation_location_title">Violation Location*</string>
@@ -83,6 +83,18 @@
 
     <!--ViolationResponse Location string-->
     <string name="location_violation_title">Select Location</string>
+
+
+    <!--Display violation screen string-->
+    <string name="display_violation_screen_title">Violation Detail : </string>
+    <string name="display_violation_violation_type_title">Type : </string>
+    <string name="display_violation_violation_date">Date : </string>
+    <string name="display_violation_violation_status">Status : </string>
+    <string name="display_violation_violation_danger_level">Danger Level : </string>
+    <string name="display_violation_violation_Frequency_level">Frequency Level : </string>
+    <string name="display_violation_violation_media_title"> Media : </string>
+    <string name="display_violation_violation_desc">Description : </string>
+    <string name="display_violation_violation_tag">Tags : </string>
 
 
     <string-array name="danger_level_array">

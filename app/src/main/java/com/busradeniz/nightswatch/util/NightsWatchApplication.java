@@ -14,6 +14,7 @@ public class NightsWatchApplication extends Application {
     public static Context context;
     public static String token;
     public static int userId;
+    public static String username;
 
 
 }

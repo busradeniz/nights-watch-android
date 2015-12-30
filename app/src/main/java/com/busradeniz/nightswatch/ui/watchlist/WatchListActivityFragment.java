@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.ServiceProvider;
@@ -20,7 +22,10 @@ import com.busradeniz.nightswatch.ui.violationlist.ViolationListAdapter;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.busradeniz.nightswatch.util.SimpleDividerItemDecoration;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,13 +41,17 @@ public class WatchListActivityFragment extends Fragment {
 
     private static String TAG = "WatchListActivityFragment";
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private ProgressDialog progressDialog;
 
 
-    @Bind(R.id.watchlist_recycler_view)
-    RecyclerView watchlist_recycler_view;
+    @Bind(R.id.violationListView)
+    ListView watch_violation_list_view;
     @Bind(R.id.toolbar) Toolbar toolbar;
+
+
+    private List<ViolationResponse> violationResponseList;
+    private ViolationListAdapter violationListAdapter;
+
     public WatchListActivityFragment() {
     }
 
@@ -60,11 +69,14 @@ public class WatchListActivityFragment extends Fragment {
         ab.setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle(getString(R.string.watch_title));
 
+        watch_violation_list_view = (ListView) view.findViewById(R.id.violationListView);
+        watch_violation_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                displayViolationDetail(violationResponseList.get(position));
+            }
+        });
 
-        watchlist_recycler_view.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        watchlist_recycler_view.setLayoutManager(mLayoutManager);
-        watchlist_recycler_view.addItemDecoration(new SimpleDividerItemDecoration(getActivity().getApplicationContext()));
 
 
         sendGetUserWatchedViolationsRequest();
@@ -73,8 +85,13 @@ public class WatchListActivityFragment extends Fragment {
     }
 
     private void sendGetUserWatchedViolationsRequest() {
+        Map<String, String> fieldMap = new HashMap<String, String>();
+        fieldMap.put("violationStatus" ,"NEW");
+        fieldMap.put("violationStatus","IN_PROGRESS");
+
+
         showProgress();
-        ServiceProvider.getViolationService().getUserWatchedViolations(null)
+        ServiceProvider.getViolationService().getUserWatchedViolations(fieldMap)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<ViolationResponse>>() {
@@ -99,15 +116,22 @@ public class WatchListActivityFragment extends Fragment {
     }
 
     private void updateScreen(List<ViolationResponse> violationResponses) {
-        if (mAdapter == null) {
-            mAdapter = new ViolationListAdapter(violationResponses);
-            watchlist_recycler_view.setAdapter(mAdapter);
+        violationResponseList = violationResponses;
+        if (violationListAdapter == null) {
+            violationListAdapter = new ViolationListAdapter(getActivity(),violationResponses);
+            watch_violation_list_view.setAdapter(violationListAdapter);
+            return;
         }
+        violationListAdapter.notifyDataSetChanged();
 
-        mAdapter.notifyDataSetChanged();
     }
 
     private void showProgress() {
         progressDialog = ProgressDialog.show(NightsWatchApplication.context, getResources().getString(R.string.progress_title_text), getResources().getString(R.string.progress_message_text), true);
     }
+
+    private void displayViolationDetail(ViolationResponse violationResponse){
+//        homeActivity.openDisplayFragment(violationResponse);
+    }
+
 }

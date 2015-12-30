@@ -3,6 +3,7 @@ package com.busradeniz.nightswatch.service;
 import android.util.Log;
 
 import com.busradeniz.nightswatch.service.fileupload.FileUploadService;
+import com.busradeniz.nightswatch.service.like.LikeService;
 import com.busradeniz.nightswatch.service.login.LoginService;
 import com.busradeniz.nightswatch.service.signup.SignUpService;
 import com.busradeniz.nightswatch.service.user.UserService;
@@ -95,6 +96,11 @@ public class ServiceProvider {
     public static FileUploadService getFileUploadService(){
         initializeRetrofitWithInterceptor();
         return retrofitInceptor.create(FileUploadService.class);
+    }
+
+    public static LikeService getLikeService(){
+        initializeRetrofitWithInterceptor();
+        return retrofitInceptor.create(LikeService.class);
     }
 
     public static void reset(){

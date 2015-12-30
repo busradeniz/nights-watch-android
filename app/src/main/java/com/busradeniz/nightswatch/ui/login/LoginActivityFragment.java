@@ -140,9 +140,11 @@ public class LoginActivityFragment extends Fragment {
                         SharedPreferences.Editor editor = preferences.edit();
                         //TODO  add remember me
                         editor.putInt("userId", loginResponse.getUserId());
+                        editor.putString("username" , login_txt_username.getText().toString());
                         editor.commit();
                         NightsWatchApplication.token = loginResponse.getToken();
                         NightsWatchApplication.userId = loginResponse.getUserId();
+                        NightsWatchApplication.username= login_txt_username.getText().toString();
                         openHomeScreen();
                     }
                 });
