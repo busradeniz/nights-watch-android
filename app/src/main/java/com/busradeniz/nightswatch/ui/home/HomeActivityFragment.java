@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,15 +15,26 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.busradeniz.nightswatch.R;
+import com.busradeniz.nightswatch.service.ServiceProvider;
+import com.busradeniz.nightswatch.service.login.LoginRequest;
+import com.busradeniz.nightswatch.service.login.LoginResponse;
 import com.busradeniz.nightswatch.ui.violation.CreateViolationActivity;
 import com.busradeniz.nightswatch.ui.violationlist.ViolationListFragment;
+import com.busradeniz.nightswatch.util.Constants;
+import com.busradeniz.nightswatch.util.NightsWatchApplication;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 
 /**
@@ -114,6 +126,8 @@ public class HomeActivityFragment extends Fragment {
         adapter.addFragment(topViolationListFragment, getString(R.string.home_page_top_text));
         viewPager.setAdapter(adapter);
     }
+
+
 
     private void openCreateViolationScreen(){
         Intent intent = new Intent(getActivity(), CreateViolationActivity.class);

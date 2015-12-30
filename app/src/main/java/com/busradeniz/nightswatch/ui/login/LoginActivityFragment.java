@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.ui.home.HomeActivity;
@@ -51,6 +53,9 @@ public class LoginActivityFragment extends Fragment {
     TextView login_txt_password_fail;
     @Bind(R.id.login_forgot_password)
     TextView login_forgot_password;
+    @Bind(R.id.checkbox_remember_me)
+    CheckBox checkbox_remember_me;
+
 
     private ProgressDialog progressDialog;
 
@@ -104,6 +109,7 @@ public class LoginActivityFragment extends Fragment {
 
         login_txt_password.setText("12345");
         login_txt_username.setText("test");
+
         return view;
     }
 
@@ -131,20 +137,26 @@ public class LoginActivityFragment extends Fragment {
                     public void onError(Throwable e) {
                         progressDialog.dismiss();
                         Log.i("LOGIN", "login failed :" + e.getLocalizedMessage());
+                        Toast.makeText(NightsWatchApplication.context,getString(R.string.login_failed_text), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onNext(LoginResponse loginResponse) {
                         progressDialog.dismiss();
-                        SharedPreferences preferences = getActivity().getSharedPreferences(Constants.APP_NAME, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = preferences.edit();
-                        //TODO  add remember me
-                        editor.putInt("userId", loginResponse.getUserId());
-                        editor.putString("username" , login_txt_username.getText().toString());
-                        editor.commit();
+
+                        if (checkbox_remember_me.isChecked()){
+                            SharedPreferences preferences = getActivity().getSharedPreferences(Constants.APP_NAME, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putInt("userId", loginResponse.getUserId());
+                            editor.putString("username" , login_txt_username.getText().toString());
+                            editor.putString("password" , login_txt_password.getText().toString());
+                            editor.commit();
+                        }
+
                         NightsWatchApplication.token = loginResponse.getToken();
                         NightsWatchApplication.userId = loginResponse.getUserId();
                         NightsWatchApplication.username= login_txt_username.getText().toString();
+
                         openHomeScreen();
                     }
                 });
@@ -191,7 +203,4 @@ public class LoginActivityFragment extends Fragment {
         progressDialog = ProgressDialog.show(getActivity(), getResources().getString(R.string.progress_title_text), getResources().getString(R.string.progress_message_text), true);
     }
 
-    private void onRememberMeClicked(){
-
-    }
 }

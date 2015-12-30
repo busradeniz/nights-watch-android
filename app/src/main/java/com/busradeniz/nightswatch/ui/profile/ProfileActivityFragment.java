@@ -1,6 +1,9 @@
 package com.busradeniz.nightswatch.ui.profile;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -18,7 +21,9 @@ import android.widget.TextView;
 import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.ServiceProvider;
 import com.busradeniz.nightswatch.service.signup.SignUpResponse;
+import com.busradeniz.nightswatch.ui.login.LoginActivity;
 import com.busradeniz.nightswatch.util.CircleTransformation;
+import com.busradeniz.nightswatch.util.Constants;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.squareup.picasso.Picasso;
 
@@ -43,6 +48,7 @@ public class ProfileActivityFragment extends Fragment {
     @Bind(R.id.profile_txt_bio) TextView profile_txt_bio;
     @Bind(R.id.profile_btn_change_password) AppCompatButton profile_btn_change_password;
     @Bind(R.id.profile_btn_edit_profile) AppCompatButton profile_btn_edit_profile;
+    @Bind(R.id.profile_btn_logout) AppCompatButton profile_btn_logout;
 
     private ProgressDialog progressDialog;
 
@@ -75,6 +81,19 @@ public class ProfileActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 openEditProfileScreen();
+            }
+        });
+
+        profile_btn_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences preferences = getActivity().getSharedPreferences(Constants.APP_NAME, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.commit();
+
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
             }
         });
 

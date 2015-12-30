@@ -11,11 +11,16 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.busradeniz.nightswatch.R;
+import com.busradeniz.nightswatch.service.ServiceProvider;
+import com.busradeniz.nightswatch.service.login.LoginRequest;
+import com.busradeniz.nightswatch.service.login.LoginResponse;
 import com.busradeniz.nightswatch.service.violation.ViolationResponse;
 import com.busradeniz.nightswatch.ui.history.HistoryActivityFragment;
 import com.busradeniz.nightswatch.ui.profile.ProfileActivityFragment;
@@ -23,6 +28,11 @@ import com.busradeniz.nightswatch.ui.statistics.StatisticsActivityFragment;
 import com.busradeniz.nightswatch.ui.violation.DisplayViolationFragment;
 import com.busradeniz.nightswatch.ui.watchlist.WatchListActivityFragment;
 import com.busradeniz.nightswatch.util.Constants;
+import com.busradeniz.nightswatch.util.NightsWatchApplication;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -47,10 +57,11 @@ public class HomeActivity extends AppCompatActivity {
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
+
         SharedPreferences preferences = getSharedPreferences(Constants.APP_NAME, Context.MODE_PRIVATE);
         TextView nav_view_txt = (TextView) findViewById(R.id.nav_view_txt);
-        nav_view_txt.setText(preferences.getString("username",""));
-       openHomeScreen();
+        nav_view_txt.setText(preferences.getString("username", ""));
+        openHomeScreen();
     }
 
     @Override
@@ -65,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 1) {
             fm.popBackStack();
@@ -104,8 +115,7 @@ public class HomeActivity extends AppCompatActivity {
                 });
     }
 
-
-    private void openHomeScreen(){
+    private void openHomeScreen() {
         HomeActivityFragment homeActivityFragment = new HomeActivityFragment();
         openFragment(homeActivityFragment);
     }
@@ -123,7 +133,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void openHistoryScreen() {
         HistoryActivityFragment historyActivityFragment = new HistoryActivityFragment();
-       openFragment(historyActivityFragment);
+        openFragment(historyActivityFragment);
 
     }
 
@@ -132,14 +142,14 @@ public class HomeActivity extends AppCompatActivity {
         openFragment(watchListActivityFragment);
     }
 
-    private void openFragment(Fragment fragment){
+    private void openFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.baseFrameContainer, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
-    public void openDisplayFragment(ViolationResponse violationResponse){
+    public void openDisplayFragment(ViolationResponse violationResponse) {
         DisplayViolationFragment displayViolationFragment = new DisplayViolationFragment();
         displayViolationFragment.setSelectedViolation(violationResponse);
         openFragment(displayViolationFragment);

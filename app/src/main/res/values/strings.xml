@@ -34,6 +34,8 @@
     <!--Change password screen strings -->
     <string name="change_password_new_password">New Password</string>
     <string name="change_password_old_password">Old Password</string>
+    <string name="change_password_password_fail_text">Enter a valid password</string>
+    <string name="change_password_not_match_fail_text">Password does not match the confirm password</string>
 
     <!--Edit Profile screen string-->
     <string name="edit_profile_txt_profile_img">Profile Photo</string>
@@ -43,9 +45,11 @@
     <string name="edit_profile_bio">Short Bio</string>
     <string name="edit_profile_btn_title">Submit</string>
 
+
     <!--Reset Password screen string-->
     <string name="reset_password_btn_title">Reset Password</string>
-
+    <string name="reset_password_email_fail_text">Enter a valid email</string>
+    <string name="reset_password_password_fail_text">Enter a valid username</string>
 
     <!--Media option screen string-->
     <string-array name="photoOptionArray">
@@ -105,4 +109,13 @@
     <string name="title_activity_map">MapActivity</string>
 
 
+    <!--Warning message-->
+    <string name="login_failed_text">Login failed! Please be sure that password and username are correct!</string>
+    <string name="reset_password_failed_text">Reset password request failed! Please be sure that email and username are correct!</string>
+    <string name="reset_password_success_text">Reset password success! Please check your email!</string>
+    <string name="signup_failed_text">Signup request failed! Please be sure that email and username are correct!</string>
+    <string name="signup_success_text">Signup request success! Please login to system!</string>
+
+
+    <string name="title_activity_splash">Splash</string>
 </resources>

@@ -2,7 +2,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="50dp"
+    android:paddingTop="20dp"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
     android:background="@color/colorPrimary">
@@ -10,15 +10,15 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="72dp"
-        android:layout_marginBottom="24dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="14dp"
+        android:src="@drawable/nav_icon" />
 
     <!--  Name Label -->
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:theme="@style/WhiteTextInputLayoutTheme">
 
         <EditText android:id="@+id/signup_txt_username"
@@ -30,12 +30,21 @@
 
     </android.support.design.widget.TextInputLayout>
 
+    <TextView
+        android:id="@+id/signup_txt_username_fail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="Enter valid password"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="12dip"
+        android:visibility="invisible" />
+
     <!-- Email Label -->
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:theme="@style/WhiteTextInputLayoutTheme">
 
         <EditText android:id="@+id/signup_txt_email"
@@ -46,12 +55,21 @@
             android:hint="@string/edit_profile_txt_email" />
     </android.support.design.widget.TextInputLayout>
 
+    <TextView
+        android:id="@+id/signup_txt_email_fail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="Enter valid password"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="12dip"
+        android:visibility="invisible" />
+
     <!-- Password Label -->
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:theme="@style/WhiteTextInputLayoutTheme">
         <EditText android:id="@+id/signup_txt_password"
             android:layout_width="match_parent"
@@ -61,12 +79,22 @@
             android:hint="@string/txt_hint_password"/>
     </android.support.design.widget.TextInputLayout>
 
+    <TextView
+        android:id="@+id/signup_txt_password_fail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="Enter valid password"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="12dip"
+        android:visibility="invisible" />
+
+
     <!-- Password Label -->
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:theme="@style/WhiteTextInputLayoutTheme">
 
         <EditText android:id="@+id/signup_txt_password_again"
@@ -76,6 +104,17 @@
             android:textColor="@android:color/white"
             android:hint="@string/txt_hint_password_again"/>
     </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/signup_txt_password_again_fail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="Enter valid password"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="12dip"
+        android:visibility="invisible" />
 
 
     <!-- Signup Button -->
