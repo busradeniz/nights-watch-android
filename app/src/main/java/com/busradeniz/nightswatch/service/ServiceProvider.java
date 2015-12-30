@@ -8,6 +8,7 @@ import com.busradeniz.nightswatch.service.login.LoginService;
 import com.busradeniz.nightswatch.service.signup.SignUpService;
 import com.busradeniz.nightswatch.service.user.UserService;
 import com.busradeniz.nightswatch.service.violation.ViolationService;
+import com.busradeniz.nightswatch.service.watch.WatchService;
 import com.busradeniz.nightswatch.util.Constants;
 import com.busradeniz.nightswatch.util.LoggingInterceptor;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
@@ -40,7 +41,7 @@ public class ServiceProvider {
         }
     }
 
-    private static void initializeRetrofitWithInterceptor(){
+    private static void initializeRetrofitWithInterceptor() {
         if (retrofitInceptor == null) {
             OkHttpClient client = new OkHttpClient();
             LoggingInterceptor interceptor = new LoggingInterceptor();
@@ -50,8 +51,8 @@ public class ServiceProvider {
                 public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
                     Request original = chain.request();
                     Request request = null;
-                    if (NightsWatchApplication.token != null){
-                        Log.i("Token" , NightsWatchApplication.token);
+                    if (NightsWatchApplication.token != null) {
+                        Log.i("Token", NightsWatchApplication.token);
                         // Request customization: add request headers
                         Request.Builder requestBuilder = original.newBuilder()
                                 .header("Authorization", NightsWatchApplication.token)
@@ -68,42 +69,49 @@ public class ServiceProvider {
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
+
                     .build();
         }
     }
 
 
-    public static LoginService getLoginService(){
+    public static LoginService getLoginService() {
         initializeRetrofit();
         return retrofit.create(LoginService.class);
     }
 
-    public static SignUpService getSignUpService(){
+    public static SignUpService getSignUpService() {
         initializeRetrofit();
         return retrofit.create(SignUpService.class);
     }
 
-    public static UserService getUserService(){
+    public static UserService getUserService() {
         initializeRetrofitWithInterceptor();
         return retrofitInceptor.create(UserService.class);
     }
 
-    public static ViolationService getViolationService(){
+    public static ViolationService getViolationService() {
         initializeRetrofitWithInterceptor();
         return retrofitInceptor.create(ViolationService.class);
     }
 
-    public static FileUploadService getFileUploadService(){
+    public static FileUploadService getFileUploadService() {
         initializeRetrofitWithInterceptor();
         return retrofitInceptor.create(FileUploadService.class);
     }
 
-    public static LikeService getLikeService(){
+    public static LikeService getLikeService() {
         initializeRetrofitWithInterceptor();
         return retrofitInceptor.create(LikeService.class);
     }
 
-    public static void reset(){
+    public static WatchService getWatchService() {
+        initializeRetrofitWithInterceptor();
+        return retrofitInceptor.create(WatchService.class);
+    }
+
+
+    public static void reset() {
         retrofit = null;
         retrofitInceptor = null;
     }

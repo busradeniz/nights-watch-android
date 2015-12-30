@@ -2,6 +2,7 @@ package com.busradeniz.nightswatch.service.violation;
 
 import com.busradeniz.nightswatch.service.fileupload.Media;
 import com.busradeniz.nightswatch.service.like.Like;
+import com.busradeniz.nightswatch.service.watch.Watch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import rx.Observable;
 public interface ViolationService {
 
     @GET("/nights-watch/violation")
-    Observable<List<ViolationResponse>> getNearbyViolations(@Query("longitude") double longitude , @Query("latitude") double latitude);
+    Observable<List<ViolationResponse>> getNearbyViolations(@Query("longitude") double longitude, @Query("latitude") double latitude);
 
 
     @GET("/nights-watch/violation/top20/mostLiked")
@@ -35,7 +36,7 @@ public interface ViolationService {
     Observable<List<ViolationResponse>> getUserViolations();
 
     @GET("/nights-watch/violation/top20/watched")
-    Observable<List<ViolationResponse>> getUserWatchedViolations(@QueryMap Map<String,String> violationStatus);
+    Observable<List<ViolationResponse>> getUserWatchedViolations(@QueryMap Map<String, String> violationStatus);
 
     @GET("/nights-watch/violationGroup")
     Observable<List<ViolationGroup>> getViolationGroups();
@@ -49,4 +50,8 @@ public interface ViolationService {
 
     @GET("/nights-watch/violation/{id}/userLikes")
     Observable<List<Like>> getViolationLikes(@Path("id") int id);
+
+
+    @GET("/nights-watch/violation/{id}/userWatches")
+    Observable<List<Watch>> getViolationWatches(@Path("id") int id);
 }

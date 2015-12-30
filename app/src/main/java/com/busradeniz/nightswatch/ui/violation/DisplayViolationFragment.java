@@ -24,9 +24,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.busradeniz.nightswatch.R;
+import com.busradeniz.nightswatch.service.Response;
 import com.busradeniz.nightswatch.service.ServiceProvider;
 import com.busradeniz.nightswatch.service.like.Like;
 import com.busradeniz.nightswatch.service.violation.ViolationResponse;
+import com.busradeniz.nightswatch.service.watch.Watch;
 import com.busradeniz.nightswatch.util.CircleTransformation;
 import com.busradeniz.nightswatch.util.Constants;
 import com.busradeniz.nightswatch.util.DateFormatter;
@@ -41,6 +43,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.observers.Subscribers;
 import rx.schedulers.Schedulers;
 
 /**
@@ -78,12 +81,13 @@ public class DisplayViolationFragment extends Fragment {
     TextView txtViolationFollowerNumber;
     @Bind(R.id.imgLike)
     ImageView imgLike;
+    @Bind(R.id.imgFollower)
+    ImageView imgFollower;
 
-
-    private boolean isLike;
     private ViolationResponse selectedViolation;
     private static String TAG = "DisplayViolationFragment";
-    private Like userLike;
+    private Like userLike = null;
+    private Watch userWatch = null;
 
     public void setSelectedViolation(ViolationResponse selectedViolation) {
         this.selectedViolation = selectedViolation;
@@ -110,10 +114,16 @@ public class DisplayViolationFragment extends Fragment {
                 sendLikeUnLikeRequest();
             }
         });
-
+        imgFollower.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendWatchUnwatchRequest();
+            }
+        });
 
         if (selectedViolation != null) {
             sendGetViolationLikes();
+            sendGetViolationWatches();
             setViolationImage();
             display_violation_txt_violation_title.setText(selectedViolation.getTitle());
             display_violation_txt_violation_group.setText(" " + selectedViolation.getViolationGroupName());
@@ -164,7 +174,6 @@ public class DisplayViolationFragment extends Fragment {
         }
     }
 
-
     private void sendGetViolationLikes() {
         ServiceProvider.getViolationService().getViolationLikes(selectedViolation.getId())
                 .subscribeOn(Schedulers.newThread())
@@ -188,8 +197,7 @@ public class DisplayViolationFragment extends Fragment {
                         for (int i = 0; i < likes.size(); i++) {
                             if (likes.get(i).getUsername().equals(username)) {
                                 Log.i(TAG, "like id :" + likes.get(i).getId() + "");
-                                userLike = likes.get(i);
-                                setLikeView(true);
+                                setLikeView(likes.get(i));
                                 return;
                             }
                         }
@@ -198,9 +206,43 @@ public class DisplayViolationFragment extends Fragment {
 
     }
 
-    private void setLikeView(Boolean like) {
-        isLike = like;
-        if (like) {
+    private void sendGetViolationWatches() {
+        ServiceProvider.getViolationService().getViolationWatches(selectedViolation.getId())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<Watch>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.i(TAG, "getViolationWatches completed");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG, "getViolationWatches failed" + e.getLocalizedMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<Watch> watches) {
+                        SharedPreferences preferences = getActivity().getSharedPreferences(Constants.APP_NAME, Context.MODE_PRIVATE);
+                        String username = preferences.getString("username", "");
+
+                        for (int i = 0; i < watches.size(); i++) {
+                            if (watches.get(i).getUsername().equals(username)) {
+                                Log.i(TAG, "watch id :" + watches.get(i).getId() + "");
+                                setWatchView(watches.get(i));
+                                return;
+                            }
+                        }
+                    }
+                });
+
+    }
+
+
+
+    private void setLikeView(Like like) {
+        userLike = like;
+        if (userLike != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 imgLike.setBackground(getResources().getDrawable(R.drawable.like_blue, NightsWatchApplication.context.getTheme()));
             } else {
@@ -217,14 +259,56 @@ public class DisplayViolationFragment extends Fragment {
 
     }
 
+
+    private void setWatchView(Watch watch) {
+        userWatch = watch;
+        if (userWatch != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                imgFollower.setBackground(getResources().getDrawable(R.drawable.follow_blue, NightsWatchApplication.context.getTheme()));
+            } else {
+                imgFollower.setBackground(getResources().getDrawable(R.drawable.follow_blue));
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                imgFollower.setBackground(getResources().getDrawable(R.drawable.follow, NightsWatchApplication.context.getTheme()));
+            } else {
+                imgFollower.setBackground(getResources().getDrawable(R.drawable.follow));
+            }
+        }
+
+
+    }
+
+
     private void sendLikeUnLikeRequest() {
-        if (isLike) {
-            // send unlike
+        if (userLike != null) {
+            ServiceProvider.getLikeService().unlike(userLike.getId())
+                    .observeOn(Schedulers.newThread())
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<Response>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.i(TAG, "unlike failed :" + e.getLocalizedMessage());
+
+                        }
+
+                        @Override
+                        public void onNext(Response response) {
+                            Log.i(TAG, "unlike success");
+                            setLikeView(null);
+                            int count = Integer.parseInt(txtViolationLikeNumber.getText().toString()) -1;
+                            txtViolationLikeNumber.setText("" + count);
+                        }
+                    });
 
 
         } else {
             Like like = new Like();
-            like.setId(0);
             like.setLikeDate(SystemClock.currentThreadTimeMillis());
             like.setUsername(NightsWatchApplication.username);
             like.setViolationId(selectedViolation.getId());
@@ -245,8 +329,7 @@ public class DisplayViolationFragment extends Fragment {
                         @Override
                         public void onNext(Like like) {
                             Log.i(TAG, "like success");
-                            userLike = like;
-                            setLikeView(true);
+                            setLikeView(like);
                             int count = Integer.parseInt(txtViolationLikeNumber.getText().toString()) + 1;
                             txtViolationLikeNumber.setText("" + count);
                         }
@@ -254,4 +337,62 @@ public class DisplayViolationFragment extends Fragment {
         }
     }
 
+    private void sendWatchUnwatchRequest(){
+
+        if (userWatch != null){
+            ServiceProvider.getWatchService().unWatch(selectedViolation.getId())
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<Response>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.i(TAG, "unwatch failed" + e.getLocalizedMessage());
+
+                        }
+
+                        @Override
+                        public void onNext(Response response) {
+                            Log.i(TAG, "unwatch success");
+                            setWatchView(null);
+                            int count = Integer.parseInt(txtViolationFollowerNumber.getText().toString()) -1;
+                            txtViolationFollowerNumber.setText("" + count);
+                        }
+                    });
+
+
+        }else {
+            Watch watch = new Watch();
+            watch.setViolationId(selectedViolation.getId());
+            watch.setUsername(NightsWatchApplication.username);
+
+            ServiceProvider.getWatchService().watch(watch)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<Watch>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.i(TAG, "watch failed" + e.getLocalizedMessage());
+
+                        }
+
+                        @Override
+                        public void onNext(Watch watch) {
+                            Log.i(TAG, "watch success");
+                            setWatchView(watch);
+                            int count = Integer.parseInt(txtViolationFollowerNumber.getText().toString()) + 1;
+                            txtViolationFollowerNumber.setText("" + count);
+                        }
+                    });
+        }
+    }
 }

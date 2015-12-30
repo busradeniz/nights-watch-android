@@ -258,6 +258,7 @@
 
 
                     <ImageView
+                        android:id="@+id/imgComment"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginBottom="5dp"
@@ -287,11 +288,12 @@
                     android:gravity="center">
 
                     <ImageView
+                        android:id="@+id/imgFollower"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginBottom="4dp"
                         android:layout_marginTop="6dp"
-                        android:src="@drawable/follow" />
+                        android:background="@drawable/follow" />
 
                     <TextView
                         android:id="@+id/txtViolationFollowerNumber"
