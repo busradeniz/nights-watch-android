@@ -76,10 +76,6 @@ public class EditProfileFragment extends Fragment {
         ab.setDisplayHomeAsUpEnabled(true);
 
         toolbar.setTitle(getResources().getString(R.string.profile_txt_edit_rpofile));
-
-        Picasso.with(getActivity())
-                .load(Constants.IMAGE_URL).transform(new CircleTransformation()).into(edit_profile_img_user);
-
         edit_profile_img_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

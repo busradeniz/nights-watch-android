@@ -138,6 +138,8 @@
 
     <string name="history_success_text">You have not created any violation up to now! </string>
     <string name="history_fail_text">History request failed! Please try again later!</string>
+    <string name="change_password_fail_text">Change password request failed! Please be sure that new passwords are valid!</string>
+    <string name="change_password_success_text">Your password changed successfully!</string>
 
     <string name="title_activity_splash">Splash</string>
 </resources>

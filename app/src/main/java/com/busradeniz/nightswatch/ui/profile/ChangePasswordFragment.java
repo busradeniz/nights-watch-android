@@ -1,6 +1,8 @@
 package com.busradeniz.nightswatch.ui.profile;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -14,12 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.ServiceProvider;
 import com.busradeniz.nightswatch.service.user.ChangePasswordRequest;
 import com.busradeniz.nightswatch.service.user.ChangePasswordResponse;
 import com.busradeniz.nightswatch.util.Constants;
+import com.busradeniz.nightswatch.util.NightsWatchApplication;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -128,12 +132,22 @@ public class ChangePasswordFragment extends Fragment {
                     @Override
                     public void onError(Throwable e) {
                         progressDialog.dismiss();
+                        Toast.makeText(NightsWatchApplication.context,getString(R.string.change_password_fail_text) ,Toast.LENGTH_LONG).show();
                         Log.i(TAG , "Change Password request failed : " + e.getLocalizedMessage());
                     }
 
                     @Override
                     public void onNext(ChangePasswordResponse changePasswordResponse) {
                         progressDialog.dismiss();
+                        Toast.makeText(NightsWatchApplication.context,getString(R.string.change_password_success_text) ,Toast.LENGTH_LONG).show();
+                        SharedPreferences preferences = getActivity().getSharedPreferences(Constants.APP_NAME, Context.MODE_PRIVATE);
+                        if (preferences.getString("password" , "").length() > 0){
+
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("password" , change_password_txt_new_password.getText().toString());
+                            editor.commit();
+                        }
+
                         Log.i(TAG , "Change Password request success : " + changePasswordResponse.toString());
                     }
                 });
@@ -184,5 +198,6 @@ public class ChangePasswordFragment extends Fragment {
         change_password_txt_new_password2_fail.setText("");
 
     }
+
 
 }

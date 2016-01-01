@@ -70,6 +70,8 @@ public class ProfileActivityFragment extends Fragment {
 
         toolbar.setTitle(getResources().getString(R.string.profile_title));
 
+        profile_img_user.setBackground(getActivity().getDrawable(R.drawable.user));
+
         profile_btn_change_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,8 +139,10 @@ public class ProfileActivityFragment extends Fragment {
         profile_txt_bio_title.setText("About");
         profile_txt_bio.setText(signUpResponse.getBio());
 
-        Picasso.with(getActivity())
-                .load(signUpResponse.getMedia().getUrl()).transform(new CircleTransformation()).into(profile_img_user);
+        if (signUpResponse.getMedia().getUrl().length() > 0){
+            Picasso.with(getActivity())
+                    .load(signUpResponse.getMedia().getUrl()).resize(300,300).transform(new CircleTransformation()).into(profile_img_user);
+        }
     }
     private void openChangePasswordScreen(){
         ChangePasswordFragment changePasswordFragment = new ChangePasswordFragment();
