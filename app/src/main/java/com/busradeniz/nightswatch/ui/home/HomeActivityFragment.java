@@ -1,14 +1,19 @@
 package com.busradeniz.nightswatch.ui.home;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -30,6 +35,7 @@ import com.busradeniz.nightswatch.service.login.LoginResponse;
 import com.busradeniz.nightswatch.ui.violation.CreateViolationActivity;
 import com.busradeniz.nightswatch.ui.violationlist.ViolationListFragment;
 import com.busradeniz.nightswatch.util.Constants;
+import com.busradeniz.nightswatch.util.MediaUtil;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
 
 import rx.Subscriber;
@@ -42,12 +48,16 @@ import rx.schedulers.Schedulers;
  */
 public class HomeActivityFragment extends Fragment {
 
+
+    private static int RESULT_CODE = 1;
     private static String TAG = "HomeActivityFragment";
     private ProgressDialog progressDialog;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private FloatingActionButton floatingActionButton;
+    private HomeViewPagerAdapter adapter;
+
 
     public HomeActivityFragment() {
     }
@@ -93,7 +103,11 @@ public class HomeActivityFragment extends Fragment {
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
+    }
 
     private void setupViewPager() {
 
@@ -108,17 +122,30 @@ public class HomeActivityFragment extends Fragment {
         topViolationListFragment.setListType(getString(R.string.home_page_top_text),(HomeActivity) getActivity());
 
 
-        HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(getChildFragmentManager());
+        adapter = new HomeViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(recentViolationListFragment, getString(R.string.home_page_recent_text));
         adapter.addFragment(nearbyViolationListFragment, getString(R.string.home_page_nearby_text));
         adapter.addFragment(topViolationListFragment, getString(R.string.home_page_top_text));
+
         viewPager.setAdapter(adapter);
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RESULT_CODE){
+            for (int i = 0 ; i < 3 ; i++){
+                Log.i(TAG, "onActivityResult works!");
+                ViolationListFragment fragment = (ViolationListFragment)  adapter.getItem(i);
+                fragment.update();
+            }
+        }else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 
     private void openCreateViolationScreen(){
         Intent intent = new Intent(getActivity(), CreateViolationActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,RESULT_CODE);
     }
 }

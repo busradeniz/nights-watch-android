@@ -4,6 +4,8 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import retrofit.Retrofit;
 
 /**
@@ -15,6 +17,9 @@ public class NightsWatchApplication extends Application {
     public static String token;
     public static int userId;
     public static String username;
+    public static GoogleApiClient mGoogleApiClient;
+    public static double latitude;
+    public static double longitude;
 
 
 }

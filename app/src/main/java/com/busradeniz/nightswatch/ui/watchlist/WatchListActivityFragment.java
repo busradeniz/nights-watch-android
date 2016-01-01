@@ -14,10 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.ServiceProvider;
 import com.busradeniz.nightswatch.service.violation.ViolationResponse;
+import com.busradeniz.nightswatch.ui.home.HomeActivity;
 import com.busradeniz.nightswatch.ui.violationlist.ViolationListAdapter;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.busradeniz.nightswatch.util.SimpleDividerItemDecoration;
@@ -40,8 +42,6 @@ public class WatchListActivityFragment extends Fragment {
 
 
     private static String TAG = "WatchListActivityFragment";
-    private RecyclerView.Adapter mAdapter;
-    private ProgressDialog progressDialog;
 
 
     @Bind(R.id.violationListView)
@@ -51,6 +51,8 @@ public class WatchListActivityFragment extends Fragment {
 
     private List<ViolationResponse> violationResponseList;
     private ViolationListAdapter violationListAdapter;
+    private ProgressDialog progressDialog;
+
 
     public WatchListActivityFragment() {
     }
@@ -85,13 +87,13 @@ public class WatchListActivityFragment extends Fragment {
     }
 
     private void sendGetUserWatchedViolationsRequest() {
-        Map<String, String> fieldMap = new HashMap<String, String>();
-        fieldMap.put("violationStatus" ,"NEW");
-        fieldMap.put("violationStatus","IN_PROGRESS");
 
+        String[] types= new String[2];
+        types[0] = "NEW";
+        types[1] = "IN_PROGRESS";
 
         showProgress();
-        ServiceProvider.getViolationService().getUserWatchedViolations(fieldMap)
+        ServiceProvider.getViolationService().getUserWatchedViolations(types)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<ViolationResponse>>() {
@@ -104,12 +106,16 @@ public class WatchListActivityFragment extends Fragment {
                     public void onError(Throwable e) {
                         progressDialog.dismiss();
                         Log.i(TAG, "getUserWatchedViolations request failed : " + e.getLocalizedMessage());
+                        Toast.makeText(NightsWatchApplication.context, getString(R.string.watchlist_fail_text) , Toast.LENGTH_LONG);
                     }
 
                     @Override
                     public void onNext(List<ViolationResponse> violationResponses) {
                         progressDialog.dismiss();
                         Log.i(TAG, "getUserWatchedViolations request success : " + violationResponses.size() + " violationResponses ");
+                        if (violationResponses.size() == 0){
+                            Toast.makeText(NightsWatchApplication.context, getString(R.string.watchlist_success_text) , Toast.LENGTH_LONG);
+                        }
                         updateScreen(violationResponses);
                     }
                 });
@@ -127,11 +133,11 @@ public class WatchListActivityFragment extends Fragment {
     }
 
     private void showProgress() {
-        progressDialog = ProgressDialog.show(NightsWatchApplication.context, getResources().getString(R.string.progress_title_text), getResources().getString(R.string.progress_message_text), true);
+        progressDialog = ProgressDialog.show(getActivity(), getResources().getString(R.string.progress_title_text), getResources().getString(R.string.progress_message_text), true);
     }
 
     private void displayViolationDetail(ViolationResponse violationResponse){
-//        homeActivity.openDisplayFragment(violationResponse);
+        ((HomeActivity) getActivity()).openDisplayFragment(violationResponse);
     }
 
 }

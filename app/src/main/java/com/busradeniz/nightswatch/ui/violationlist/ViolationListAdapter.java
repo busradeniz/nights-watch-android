@@ -79,7 +79,7 @@ public class ViolationListAdapter extends ArrayAdapter<ViolationResponse> {
 
             if (violationResponse.getMedias().size() > 0) {
                 Picasso.with(NightsWatchApplication.context)
-                        .load(violationResponse.getMedias().get(0).getUrl()).transform(new CircleTransformation()).into(viewHolder.imgViolationThumbnail);
+                        .load(violationResponse.getMedias().get(0).getUrl()).resize(240, 240).transform(new CircleTransformation()).into(viewHolder.imgViolationThumbnail);
             }
         }
 
@@ -142,6 +142,7 @@ public class ViolationListAdapter extends ArrayAdapter<ViolationResponse> {
     public long getItemId(int position) {
         return position;
     }
+
 
 
 }

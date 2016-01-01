@@ -33,10 +33,10 @@ public interface ViolationService {
     Observable<List<ViolationResponse>> getNewestViolations();
 
     @GET("/nights-watch/violation/top20/owned")
-    Observable<List<ViolationResponse>> getUserViolations();
+    Observable<List<ViolationResponse>> getUserViolations(@Query("violationStatus") String[] violationStatus);
 
     @GET("/nights-watch/violation/top20/watched")
-    Observable<List<ViolationResponse>> getUserWatchedViolations(@QueryMap Map<String, String> violationStatus);
+    Observable<List<ViolationResponse>> getUserWatchedViolations(@Query("violationStatus") String[] violationStatus);
 
     @GET("/nights-watch/violationGroup")
     Observable<List<ViolationGroup>> getViolationGroups();

@@ -2,6 +2,7 @@ package com.busradeniz.nightswatch.ui.home;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -13,7 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,14 +35,17 @@ import com.busradeniz.nightswatch.ui.violation.DisplayViolationFragment;
 import com.busradeniz.nightswatch.ui.watchlist.WatchListActivityFragment;
 import com.busradeniz.nightswatch.util.Constants;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
+import com.google.android.gms.location.LocationServices;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity{
 
     private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private LinearLayout left_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +57,19 @@ public class HomeActivity extends AppCompatActivity {
             window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
 
+
+
+
         // Set up the navigation drawer.
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
+        mDrawerList = (ListView) findViewById(R.id.listview_left_drawer);
+        left_view = (LinearLayout) findViewById(R.id.left_drawer);
 
-//        Set up navigation view
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (navigationView != null) {
-            setupDrawerContent(navigationView);
-        }
+        String[] drawler_menu_user = getResources().getStringArray(R.array.drawler_menu_user);
+        mDrawerList.setAdapter(new DrawlerAdapter(this,R.layout.drawer_list_item, drawler_menu_user));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        SharedPreferences preferences = getSharedPreferences(Constants.APP_NAME, Context.MODE_PRIVATE);
-        TextView nav_view_txt = (TextView) findViewById(R.id.nav_view_txt);
-        nav_view_txt.setText(preferences.getString("username", ""));
         openHomeScreen();
     }
 
@@ -83,37 +92,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            case R.id.home_navigation_menu_item:
-                                openHomeScreen();
-                                break;
-                            case R.id.statistics_navigation_menu_item:
-                                openStatisticsScreen();
-                                break;
-                            case R.id.profile_navigation_menu_item:
-                                openProfileScreen();
-                                break;
-                            case R.id.history_navigation_menu_item:
-                                openHistoryScreen();
-                                break;
-                            case R.id.watchlist_navigation_menu_item:
-                                openWatchListScreen();
-                                break;
-                            default:
-                                break;
-                        }
-                        // Close the navigation drawer when an item is selected.
-                        menuItem.setChecked(true);
-                        mDrawerLayout.closeDrawers();
-                        return true;
-                    }
-                });
-    }
 
     private void openHomeScreen() {
         HomeActivityFragment homeActivityFragment = new HomeActivityFragment();
@@ -144,7 +122,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void openFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.baseFrameContainer, fragment);
+        fragmentTransaction.replace(R.id.content_frame, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -154,5 +132,38 @@ public class HomeActivity extends AppCompatActivity {
         displayViolationFragment.setSelectedViolation(violationResponse);
         openFragment(displayViolationFragment);
     }
+
+
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    /** Swaps fragments in the main content view */
+    private void selectItem(int position) {
+        mDrawerList.setItemChecked(position, true);
+        mDrawerLayout.closeDrawer(left_view);
+
+       if (position == 0){
+           openHomeScreen();
+       }else if (position == 1){
+           openProfileScreen();
+       }else if(position == 2){
+           openHistoryScreen();
+       }else if(position == 3){
+           openWatchListScreen();
+       }else if(position == 4){
+           openStatisticsScreen();
+       }
+
+        // Highlight the selected item, update the title, and close the drawer
+
+    }
+
+
 
 }

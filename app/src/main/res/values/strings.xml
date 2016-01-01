@@ -12,13 +12,11 @@
 
     <string name="txt_signup_button">Sign up</string>
 
-
     <string name="home_title">Home</string>
     <string name="profile_title">Profile</string>
     <string name="history_title">My History</string>
     <string name="watch_title">My Watch List</string>
     <string name="statistics_title">Statistics</string>
-    <string name="navigation_view_header_title">Navigation header title</string>
     <string name="title_activity_history">HistoryActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_statistics">StatisticsActivity</string>
@@ -101,6 +99,13 @@
     <string name="display_violation_violation_tag">Tags : </string>
 
 
+
+
+    <!--History string-->
+    <string name="history_page_open_text">Open</string>
+    <string name="history_page_fixed_text">Fixed</string>
+
+
     <string-array name="danger_level_array">
         <item>LOW</item>
         <item>MEDIUM</item>
@@ -109,13 +114,30 @@
     <string name="title_activity_map">MapActivity</string>
 
 
+
+
+    <string-array name="drawler_menu_user">
+        <item>Home</item>
+        <item>Profile</item>
+        <item>My History</item>
+        <item>My Watch List</item>
+        <item>Statistics</item>
+
+
+    </string-array>
+
+
     <!--Warning message-->
     <string name="login_failed_text">Login failed! Please be sure that password and username are correct!</string>
     <string name="reset_password_failed_text">Reset password request failed! Please be sure that email and username are correct!</string>
     <string name="reset_password_success_text">Reset password success! Please check your email!</string>
     <string name="signup_failed_text">Signup request failed! Please be sure that email and username are correct!</string>
     <string name="signup_success_text">Signup request success! Please login to system!</string>
+    <string name="watchlist_success_text">There is no violation in your wathclist!</string>
+    <string name="watchlist_fail_text">Watchlist request failed! Please try again later!</string>
 
+    <string name="history_success_text">You have not created any violation up to now! </string>
+    <string name="history_fail_text">History request failed! Please try again later!</string>
 
     <string name="title_activity_splash">Splash</string>
 </resources>

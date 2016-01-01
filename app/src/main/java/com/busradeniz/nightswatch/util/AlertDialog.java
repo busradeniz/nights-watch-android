@@ -8,7 +8,7 @@ import android.content.DialogInterface;
  */
 public class AlertDialog {
 
-    public static   void showAlertWithPositiveButton(Context context , String title ,  String message){
+    public static   void showAlertWithPositiveButton(Context context , String title ,  String message ){
         new android.support.v7.app.AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)

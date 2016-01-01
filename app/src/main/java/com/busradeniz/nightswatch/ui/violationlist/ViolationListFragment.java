@@ -3,6 +3,7 @@ package com.busradeniz.nightswatch.ui.violationlist;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.ServiceProvider;
@@ -29,6 +31,7 @@ import com.busradeniz.nightswatch.service.violation.ViolationResponse;
 import com.busradeniz.nightswatch.ui.home.HomeActivity;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.busradeniz.nightswatch.util.SimpleDividerItemDecoration;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.List;
 import java.util.Locale;
@@ -55,11 +58,18 @@ public class ViolationListFragment extends Fragment {
 
     }
 
+    public void update(){
+        sendRequest();
+    }
+
     public void setListType(String violationListType , HomeActivity homeActivity){
         listType = violationListType;
         this.homeActivity = homeActivity;
     }
 
+    public String getListType(){
+        return listType;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,13 +86,20 @@ public class ViolationListFragment extends Fragment {
         });
         violationListView.setTextFilterEnabled(true);
 
-        sendRequest();
         setHasOptionsMenu(true);
+        sendRequest();
 
         return view;
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (violationListAdapter != null){
+            violationListAdapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -114,10 +131,6 @@ public class ViolationListFragment extends Fragment {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     private void sendRequest() {
         Log.i(TAG, "selectedListType : " + listType);
@@ -128,6 +141,10 @@ public class ViolationListFragment extends Fragment {
                 sendGetNearbyViolationListRequest();
             } else if (listType.equals(getString(R.string.home_page_top_text))) {
                 sendGetTopViolationListRequest();
+            }else if(listType.equals(getString(R.string.history_page_open_text))){
+                sendGetMyOpenListRequest();
+            }else if(listType.equals(getString(R.string.history_page_fixed_text))){
+                sendGetMyFixedListRequest();
             }
         }
 
@@ -135,7 +152,14 @@ public class ViolationListFragment extends Fragment {
 
     private void sendGetNearbyViolationListRequest() {
         showProgress();
-        ServiceProvider.getViolationService().getNearbyViolations(0, 0)
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                NightsWatchApplication.mGoogleApiClient);
+
+        if (mLastLocation != null){
+            NightsWatchApplication.latitude = mLastLocation.getLatitude();
+            NightsWatchApplication.longitude = mLastLocation.getLongitude();
+        }
+        ServiceProvider.getViolationService().getNearbyViolations(NightsWatchApplication.longitude, NightsWatchApplication.latitude)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<ViolationResponse>>() {
@@ -211,15 +235,86 @@ public class ViolationListFragment extends Fragment {
                 });
     }
 
+    private void sendGetMyOpenListRequest(){
+
+        String[] types= new String[4];
+        types[0] = "NEW";
+        types[1] = "IN_PROGRESS";
+        types[2] = "NOT_FIXED";
+        types[3] = "NOT_VIOLATION";
+
+        showProgress();
+        ServiceProvider.getViolationService().getUserViolations(types)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<ViolationResponse>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        Log.i(TAG, "getUserViolations request failed : " + e.getLocalizedMessage());
+                        Toast.makeText(NightsWatchApplication.context, getString(R.string.history_fail_text) , Toast.LENGTH_LONG);
+                    }
+
+                    @Override
+                    public void onNext(List<ViolationResponse> violationResponses) {
+                        progressDialog.dismiss();
+                        Log.i(TAG, "getUserViolations request success : " + violationResponses.size() + " violationResponses ");
+                        if (violationResponses.size() == 0){
+                            Toast.makeText(NightsWatchApplication.context, getString(R.string.history_success_text) , Toast.LENGTH_LONG);
+                        }
+                        updateScreen(violationResponses);
+                    }
+                });
+
+    }
+
+    private void sendGetMyFixedListRequest(){
+        String[] types= new String[1];
+        types[0] = "FIXED";
+
+        showProgress();
+        ServiceProvider.getViolationService().getUserViolations(types)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<ViolationResponse>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        Log.i(TAG, "getUserViolations request failed : " + e.getLocalizedMessage());
+                        Toast.makeText(NightsWatchApplication.context, getString(R.string.history_fail_text) , Toast.LENGTH_LONG);
+                    }
+
+                    @Override
+                    public void onNext(List<ViolationResponse> violationResponses) {
+                        progressDialog.dismiss();
+                        Log.i(TAG, "getUserViolations request success : " + violationResponses.size() + " violationResponses ");
+                        if (violationResponses.size() == 0){
+                            Toast.makeText(NightsWatchApplication.context, getString(R.string.history_success_text) , Toast.LENGTH_LONG);
+                        }
+                        updateScreen(violationResponses);
+                    }
+                });
+    }
     private void updateScreen(List<ViolationResponse> violationResponses) {
 
         violationResponseList = violationResponses;
-        if (violationListAdapter == null) {
-            violationListAdapter = new ViolationListAdapter(getActivity(),violationResponses);
-            violationListView.setAdapter(violationListAdapter);
-            return;
+        if (violationListAdapter != null) {
+            violationListAdapter = null;
+
         }
-        violationListAdapter.notifyDataSetChanged();
+        violationListAdapter = new ViolationListAdapter(getActivity(),violationResponses);
+        violationListView.setAdapter(violationListAdapter);
+        return;
     }
 
     private void showProgress() {

@@ -19,6 +19,9 @@ import com.busradeniz.nightswatch.service.login.LoginResponse;
 import com.busradeniz.nightswatch.ui.home.HomeActivity;
 import com.busradeniz.nightswatch.util.Constants;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,11 +32,15 @@ import rx.schedulers.Schedulers;
 
 public class Splash extends AppCompatActivity {
 
+    private static String TAG = "Splash";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         NightsWatchApplication.context = this;
+        initializeGoogleClient();
+
 
         SharedPreferences preferences = getSharedPreferences(Constants.APP_NAME, Context.MODE_PRIVATE);
         if (preferences.getString("username" , "").length() == 0){
@@ -54,6 +61,11 @@ public class Splash extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        NightsWatchApplication.mGoogleApiClient.connect();
+        super.onStart();
+    }
 
     private void sendLoginRequest() {
         final SharedPreferences preferences = getSharedPreferences(Constants.APP_NAME, Context.MODE_PRIVATE);
@@ -87,5 +99,36 @@ public class Splash extends AppCompatActivity {
                     }
                 });
     }
+
+    private void initializeGoogleClient(){
+
+        if (NightsWatchApplication.mGoogleApiClient == null) {
+            NightsWatchApplication.mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                        @Override
+                        public void onConnected(Bundle bundle) {
+                            Log.i(TAG, "Location onConnected!");
+                        }
+
+                        @Override
+                        public void onConnectionSuspended(int i) {
+                            Log.i(TAG, "Location onConnectionSuspended!");
+
+                        }
+                    })
+                    .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                        @Override
+                        public void onConnectionFailed(ConnectionResult connectionResult) {
+                            Log.i(TAG, "Location onConnectionFailed, trying again!");
+                            NightsWatchApplication.mGoogleApiClient.connect();
+                        }
+                    })
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+
+    }
+
+
 
 }

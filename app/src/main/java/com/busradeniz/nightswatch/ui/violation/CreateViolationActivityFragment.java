@@ -3,6 +3,7 @@ package com.busradeniz.nightswatch.ui.violation;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -39,6 +40,7 @@ import com.busradeniz.nightswatch.service.violation.ViolationGroup;
 import com.busradeniz.nightswatch.service.violation.ViolationResponse;
 import com.busradeniz.nightswatch.util.AlertDialog;
 import com.busradeniz.nightswatch.util.MediaUtil;
+import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -450,7 +452,6 @@ public class CreateViolationActivityFragment extends Fragment {
                     public void onError(Throwable e) {
                         Log.i(TAG, "createNewViolation onError : " + e.getLocalizedMessage());
                         progressDialog.dismiss();
-                        AlertDialog.showAlertWithPositiveButton(getActivity(),"Create Violation Failed !" , "An error occured while creating violation, please try again !");
                     }
 
                     @Override
@@ -489,16 +490,16 @@ public class CreateViolationActivityFragment extends Fragment {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.i(TAG, "photo combine onfailed : " + e.getLocalizedMessage());
+                        Log.i(TAG, "photo add onfailed : " + e.getLocalizedMessage());
                         progressDialog.dismiss();
                         AlertDialog.showAlertWithPositiveButton(getActivity(),"Create Violation Failed !" , "An error occured while uploading medias, please try again !");
                     }
 
                     @Override
                     public void onNext(ArrayList<ViolationResponse> violationResponses) {
-                        Log.i(TAG, "photo combine success : " + violationResponses.size());
+                        Log.i(TAG, "photo add success : " + violationResponses.size());
                         progressDialog.dismiss();
-                        AlertDialog.showAlertWithPositiveButton(getActivity(),"Create Violation Succeed!" , "Violation creates successfully");
+                        showSuccessAlertDialog();
                     }
                 });
     }
@@ -512,6 +513,19 @@ public class CreateViolationActivityFragment extends Fragment {
         return false;
     }
 
+    private void showSuccessAlertDialog(){
 
+        new android.support.v7.app.AlertDialog.Builder(getActivity())
+                .setTitle("Create Violation Succeed!")
+                .setMessage("Violation creates successfully")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                })
+                .show();
+
+
+    }
 }
 
