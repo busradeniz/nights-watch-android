@@ -140,6 +140,11 @@
     <string name="history_fail_text">History request failed! Please try again later!</string>
     <string name="change_password_fail_text">Change password request failed! Please be sure that new passwords are valid!</string>
     <string name="change_password_success_text">Your password changed successfully!</string>
+    <string name="edit_profile_photo_fail_text">An error occured when uploading photo, Please try again!</string>
+    <string name="edit_profile_fail_text">An error occured when editing profile, Please try again!</string>
+    <string name="edit_profile_success_text">Your profile updated successfully!</string>
+    <string name="edit_profile__info_fail_text">Please fill all fields!</string>
+
 
     <string name="title_activity_splash">Splash</string>
 </resources>

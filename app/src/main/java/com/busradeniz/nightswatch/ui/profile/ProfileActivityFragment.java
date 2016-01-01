@@ -70,7 +70,10 @@ public class ProfileActivityFragment extends Fragment {
 
         toolbar.setTitle(getResources().getString(R.string.profile_title));
 
-        profile_img_user.setBackground(getActivity().getDrawable(R.drawable.user));
+        if (NightsWatchApplication.user == null){
+            profile_img_user.setBackground(getActivity().getDrawable(R.drawable.user));
+
+        }
 
         profile_btn_change_password.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +129,7 @@ public class ProfileActivityFragment extends Fragment {
                     public void onNext(SignUpResponse signUpResponse) {
                         progressDialog.dismiss();
                         if (signUpResponse != null)
+                            NightsWatchApplication.user = signUpResponse;
                             updateScreen(signUpResponse);
                     }
                 });
@@ -139,9 +143,11 @@ public class ProfileActivityFragment extends Fragment {
         profile_txt_bio_title.setText("About");
         profile_txt_bio.setText(signUpResponse.getBio());
 
-        if (signUpResponse.getMedia().getUrl().length() > 0){
+        if (signUpResponse.getPhoto().getUrl().length() > 0){
             Picasso.with(getActivity())
-                    .load(signUpResponse.getMedia().getUrl()).resize(300,300).transform(new CircleTransformation()).into(profile_img_user);
+                    .load(signUpResponse.getPhoto().getUrl()).resize(300,300).transform(new CircleTransformation()).into(profile_img_user);
+        }else {
+            profile_img_user.setBackground(getActivity().getDrawable(R.drawable.user));
         }
     }
     private void openChangePasswordScreen(){

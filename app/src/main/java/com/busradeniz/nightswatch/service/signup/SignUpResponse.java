@@ -14,7 +14,7 @@ public class SignUpResponse {
     private String genderTypeDto;
     private int id;
     private String username;
-    private Media media;
+    private Media photo;
 
 
     public String getBio() {
@@ -73,11 +73,11 @@ public class SignUpResponse {
         this.username = username;
     }
 
-    public Media getMedia() {
-        return media;
+    public Media getPhoto() {
+        return photo;
     }
 
-    public void setMedia(Media media) {
-        this.media = media;
+    public void setPhoto(Media photo) {
+        this.photo = photo;
     }
 }
