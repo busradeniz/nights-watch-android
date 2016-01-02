@@ -158,10 +158,10 @@ public class EditProfileFragment extends Fragment {
         signUpRequest.setBio(edit_profile_txt_bio.getText().toString());
         signUpRequest.setEmail(edit_profile_txt_email.getText().toString());
 
-//        if (selectedMedia != null){
-//            Log.i(TAG, "selectedMedia is not null - media id :" + selectedMedia.getId() + " - media url : " + selectedMedia.getUrl() + "  media filename :" + selectedMedia.getFileName());
-//            signUpRequest.setPhoto(selectedMedia);
-//        }
+        if (selectedMedia != null){
+            Log.i(TAG, "selectedMedia is not null - media id :" + selectedMedia.getId() + " - media url : " + selectedMedia.getUrl() + "  media filename :" + selectedMedia.getFileName());
+            signUpRequest.setPhoto(selectedMedia);
+        }
 
         ServiceProvider.getUserService().updateUserInfo(NightsWatchApplication.userId, signUpRequest)
                 .subscribeOn(Schedulers.newThread())
