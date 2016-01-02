@@ -283,8 +283,8 @@ public class DisplayViolationFragment extends Fragment {
     private void sendLikeUnLikeRequest() {
         if (userLike != null) {
             ServiceProvider.getLikeService().unlike(userLike.getId())
-                    .observeOn(Schedulers.newThread())
-                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<Response>() {
                         @Override
                         public void onCompleted() {
@@ -293,6 +293,7 @@ public class DisplayViolationFragment extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
+                            e.printStackTrace();
                             Log.i(TAG, "unlike failed :" + e.getLocalizedMessage());
 
                         }
