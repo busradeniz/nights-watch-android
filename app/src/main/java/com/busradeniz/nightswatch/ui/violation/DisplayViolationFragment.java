@@ -341,7 +341,7 @@ public class DisplayViolationFragment extends Fragment {
     private void sendWatchUnwatchRequest(){
 
         if (userWatch != null){
-            ServiceProvider.getWatchService().unWatch(selectedViolation.getId())
+            ServiceProvider.getWatchService().unWatch(userWatch.getId())
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<Response>() {
@@ -352,6 +352,7 @@ public class DisplayViolationFragment extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
+                            e.printStackTrace();
                             Log.i(TAG, "unwatch failed" + e.getLocalizedMessage());
 
                         }
