@@ -104,6 +104,7 @@
     <!--History string-->
     <string name="history_page_open_text">Open</string>
     <string name="history_page_fixed_text">Fixed</string>
+    <string name="history_page_all_text">All</string>
 
 
     <string-array name="danger_level_array">
@@ -156,4 +157,5 @@
 
 
     <string name="title_activity_splash">Splash</string>
+    <string name="manage_violations_title">Manage Violations</string>
 </resources>

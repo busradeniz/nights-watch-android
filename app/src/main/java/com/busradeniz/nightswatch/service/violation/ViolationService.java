@@ -1,20 +1,13 @@
 package com.busradeniz.nightswatch.service.violation;
 
+import com.busradeniz.nightswatch.service.Response;
 import com.busradeniz.nightswatch.service.fileupload.Media;
 import com.busradeniz.nightswatch.service.like.Like;
 import com.busradeniz.nightswatch.service.watch.Watch;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import retrofit.http.QueryMap;
+import retrofit.http.*;
 import rx.Observable;
+
+import java.util.List;
 
 /**
  * Created by busradeniz on 27/12/15.
@@ -54,4 +47,7 @@ public interface ViolationService {
 
     @GET("/nights-watch/violation/{id}/userWatches")
     Observable<List<Watch>> getViolationWatches(@Path("id") int id);
+
+    @DELETE("/nights-watch/violation/{id}")
+    Observable<Response> deleteViolation(@Path("id") int id);
 }

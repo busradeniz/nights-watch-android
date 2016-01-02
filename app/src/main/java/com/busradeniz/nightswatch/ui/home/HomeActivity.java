@@ -20,6 +20,7 @@ import com.busradeniz.nightswatch.ui.history.HistoryActivityFragment;
 import com.busradeniz.nightswatch.ui.profile.ProfileActivityFragment;
 import com.busradeniz.nightswatch.ui.statistics.StatisticsActivityFragment;
 import com.busradeniz.nightswatch.ui.violation.DisplayViolationFragment;
+import com.busradeniz.nightswatch.ui.violationlist.ViolationListFragment;
 import com.busradeniz.nightswatch.ui.watchlist.WatchListActivityFragment;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
 
@@ -44,7 +45,7 @@ public class HomeActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
         mDrawerList = (ListView) findViewById(R.id.listview_left_drawer);
-            left_view = (LinearLayout) findViewById(R.id.left_drawer);
+        left_view = (LinearLayout) findViewById(R.id.left_drawer);
         final int resource = NightsWatchApplication.hasRole("ADMIN") ? R.array.drawler_menu_admin : R.array.drawler_menu_user;
         final String[] drawler_menu = getResources().getStringArray(resource);
         mDrawerList.setAdapter(new DrawlerAdapter(this, R.layout.drawer_list_item, drawler_menu));
@@ -100,6 +101,13 @@ public class HomeActivity extends AppCompatActivity {
         openFragment(watchListActivityFragment);
     }
 
+    private void openViolationListFragment() {
+        ViolationListFragment violationListForDelete = new ViolationListFragment();
+        violationListForDelete.setListType(getString(R.string.history_page_open_text), this);
+        violationListForDelete.setOperationType(ViolationListFragment.OperationType.DELETE);
+        openFragment(violationListForDelete);
+    }
+
     private void openFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, fragment);
@@ -133,7 +141,7 @@ public class HomeActivity extends AppCompatActivity {
         } else if (position == 5) { // Manage Violation Groups
             Toast.makeText(this.getApplicationContext(), "Redirect to Manage Violation Groups", Toast.LENGTH_LONG).show();
         } else if (position == 6) { // Manage Violations
-            Toast.makeText(this.getApplicationContext(), "Redirect to Manage Violations", Toast.LENGTH_LONG).show();
+            openViolationListFragment();
         } else if (position == 7) { // Manage Violation Properties
             Toast.makeText(this.getApplicationContext(), "Redirect to Manage Violation Properties", Toast.LENGTH_LONG).show();
         }
