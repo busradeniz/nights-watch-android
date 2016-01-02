@@ -9,9 +9,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
@@ -19,19 +19,10 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-
+import android.view.*;
+import android.widget.*;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.ServiceProvider;
 import com.busradeniz.nightswatch.service.fileupload.Media;
@@ -40,13 +31,17 @@ import com.busradeniz.nightswatch.service.violation.ViolationGroup;
 import com.busradeniz.nightswatch.service.violation.ViolationResponse;
 import com.busradeniz.nightswatch.util.AlertDialog;
 import com.busradeniz.nightswatch.util.MediaUtil;
-import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.FuncN;
+import rx.schedulers.Schedulers;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,14 +50,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.FuncN;
-import rx.schedulers.Schedulers;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -264,8 +251,10 @@ public class CreateViolationActivityFragment extends Fragment {
 
         } catch (GooglePlayServicesRepairableException e) {
             e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         } catch (GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -371,10 +360,10 @@ public class CreateViolationActivityFragment extends Fragment {
     }
 
 
-    private void sendUploadMediaRequests(){
+    private void sendUploadMediaRequests() {
 
-        if (!isValidate()){
-            AlertDialog.showAlertWithPositiveButton(getActivity(), "Warning !" , "Please fill fields that are marked with *");
+        if (!isValidate()) {
+            AlertDialog.showAlertWithPositiveButton(getActivity(), "Warning !", "Please fill fields that are marked with *");
             return;
         }
 
@@ -410,12 +399,14 @@ public class CreateViolationActivityFragment extends Fragment {
                         Log.i(TAG, "photo combine on completed");
 
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         Log.i(TAG, "photo combine least failed : " + e.getLocalizedMessage());
                         progressDialog.dismiss();
-                        AlertDialog.showAlertWithPositiveButton(getActivity(),"Create Violation Failed !" , "An error occured while uploading medias, please try again !");
+                        AlertDialog.showAlertWithPositiveButton(getActivity(), "Create Violation Failed !", "An error occured while uploading medias, please try again !");
                     }
+
                     @Override
                     public void onNext(ArrayList<Media> medias) {
                         Log.i(TAG, "photo combine least success : " + medias.size());
@@ -457,16 +448,16 @@ public class CreateViolationActivityFragment extends Fragment {
                     @Override
                     public void onNext(ViolationResponse violationResponse) {
                         Log.i(TAG, "createNewViolation success");
-                        sendAddMediaToViolationRequest(medias , violationResponse.getId());
+                        sendAddMediaToViolationRequest(medias, violationResponse.getId());
                     }
                 });
     }
 
 
-    private void sendAddMediaToViolationRequest(ArrayList<Media> medias , final int violationId){
+    private void sendAddMediaToViolationRequest(ArrayList<Media> medias, final int violationId) {
         ArrayList<Observable<ViolationResponse>> observables = new ArrayList<>();
-        for (int i = 0 ; i < medias.size() ; i++ ){
-            Observable<ViolationResponse> observable = ServiceProvider.getViolationService().addMediaToViolation(violationId,medias.get(i));
+        for (int i = 0; i < medias.size(); i++) {
+            Observable<ViolationResponse> observable = ServiceProvider.getViolationService().addMediaToViolation(violationId, medias.get(i));
             observables.add(observable);
         }
 
@@ -492,7 +483,7 @@ public class CreateViolationActivityFragment extends Fragment {
                     public void onError(Throwable e) {
                         Log.i(TAG, "photo add onfailed : " + e.getLocalizedMessage());
                         progressDialog.dismiss();
-                        AlertDialog.showAlertWithPositiveButton(getActivity(),"Create Violation Failed !" , "An error occured while uploading medias, please try again !");
+                        AlertDialog.showAlertWithPositiveButton(getActivity(), "Create Violation Failed !", "An error occured while uploading medias, please try again !");
                     }
 
                     @Override
@@ -504,16 +495,16 @@ public class CreateViolationActivityFragment extends Fragment {
                 });
     }
 
-    private boolean isValidate(){
+    private boolean isValidate() {
         if (create_violation_txt_title.getText().toString().length() > 0 && violationRequest.getLatitude() > 0
-                && violationRequest.getLongitude() > 0 && violationRequest.getAddress().length() > 0 && mediaListUri.size() > 0){
+                && violationRequest.getLongitude() != 0 && violationRequest.getAddress().length() != 0 && mediaListUri.size() > 0) {
             return true;
         }
 
         return false;
     }
 
-    private void showSuccessAlertDialog(){
+    private void showSuccessAlertDialog() {
 
         new android.support.v7.app.AlertDialog.Builder(getActivity())
                 .setTitle("Create Violation Succeed!")
