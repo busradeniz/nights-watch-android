@@ -4,31 +4,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
-
 import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.ServiceProvider;
 import com.busradeniz.nightswatch.service.login.LoginRequest;
 import com.busradeniz.nightswatch.service.login.LoginResponse;
+import com.busradeniz.nightswatch.service.signup.SignUpResponse;
 import com.busradeniz.nightswatch.ui.home.HomeActivity;
 import com.busradeniz.nightswatch.util.Constants;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class Splash extends AppCompatActivity {
 
@@ -43,10 +38,10 @@ public class Splash extends AppCompatActivity {
 
 
         SharedPreferences preferences = getSharedPreferences(Constants.APP_NAME, Context.MODE_PRIVATE);
-        if (preferences.getString("username" , "").length() == 0){
-            Intent intent = new Intent(Splash.this , LoginActivity.class);
+        if (preferences.getString("username", "").length() == 0) {
+            Intent intent = new Intent(Splash.this, LoginActivity.class);
             startActivity(intent);
-        }else {
+        } else {
 
             final Timer timer = new Timer();
 
@@ -70,7 +65,7 @@ public class Splash extends AppCompatActivity {
     private void sendLoginRequest() {
         final SharedPreferences preferences = getSharedPreferences(Constants.APP_NAME, Context.MODE_PRIVATE);
 
-        final LoginRequest loginRequest = new LoginRequest(preferences.getString("username",""), preferences.getString("password",""));
+        final LoginRequest loginRequest = new LoginRequest(preferences.getString("username", ""), preferences.getString("password", ""));
         ServiceProvider.getLoginService().signin(loginRequest)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -92,15 +87,24 @@ public class Splash extends AppCompatActivity {
 
                         NightsWatchApplication.token = loginResponse.getToken();
                         NightsWatchApplication.userId = loginResponse.getUserId();
-                        NightsWatchApplication.username= preferences.getString("username","");
-
-                        Intent intent = new Intent(Splash.this , HomeActivity.class);
-                        startActivity(intent);
+                        NightsWatchApplication.username = preferences.getString("username", "");
+                        ServiceProvider.getUserService()
+                                .getUserInfo(loginResponse.getUserId())
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Action1<SignUpResponse>() {
+                                    @Override
+                                    public void call(SignUpResponse signUpResponse) {
+                                        NightsWatchApplication.user = signUpResponse;
+                                        Intent intent = new Intent(Splash.this, HomeActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
                     }
                 });
     }
 
-    private void initializeGoogleClient(){
+    private void initializeGoogleClient() {
 
         if (NightsWatchApplication.mGoogleApiClient == null) {
             NightsWatchApplication.mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -128,7 +132,6 @@ public class Splash extends AppCompatActivity {
         }
 
     }
-
 
 
 }

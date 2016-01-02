@@ -8,13 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.busradeniz.nightswatch.R;
-import com.busradeniz.nightswatch.service.violation.ViolationResponse;
-import com.busradeniz.nightswatch.util.CircleTransformation;
-import com.busradeniz.nightswatch.util.DateFormatter;
-import com.busradeniz.nightswatch.util.NightsWatchApplication;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by busradeniz on 01/01/16.
@@ -50,16 +44,22 @@ public class DrawlerAdapter extends ArrayAdapter<String> {
 
         String title = data[position];
         viewHolder.txtDrawlerList.setText(title);
-        if (position == 0){
+        if (position == 0) { // Home
             viewHolder.imgDrawlerList.setBackground(context.getDrawable(R.drawable.home));
-        }else if(position == 1){
+        } else if (position == 1) { // Profile
             viewHolder.imgDrawlerList.setBackground(context.getDrawable(R.drawable.profile));
-        }else if(position == 2){
+        } else if (position == 2) { // My History
             viewHolder.imgDrawlerList.setBackground(context.getDrawable(R.drawable.history));
-        }else if(position == 3){
+        } else if (position == 3) { // My Watch List
             viewHolder.imgDrawlerList.setBackground(context.getDrawable(R.drawable.follow));
-        }else if(position == 4){
+        } else if (position == 4) { // Statistics
             viewHolder.imgDrawlerList.setBackground(context.getDrawable(R.drawable.statistics));
+        } else if (position == 5) { // Manage Violation Groups
+            viewHolder.imgDrawlerList.setBackground(context.getDrawable(R.drawable.view12));
+        } else if (position == 6) { // Manage Violations
+            viewHolder.imgDrawlerList.setBackground(context.getDrawable(R.drawable.settings49));
+        } else if (position == 7) { // Manage Violation Properties
+            viewHolder.imgDrawlerList.setBackground(context.getDrawable(R.drawable.sort52));
         }
 
         return convertView;

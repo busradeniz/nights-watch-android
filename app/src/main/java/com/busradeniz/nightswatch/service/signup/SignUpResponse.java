@@ -2,6 +2,8 @@ package com.busradeniz.nightswatch.service.signup;
 
 import com.busradeniz.nightswatch.service.fileupload.Media;
 
+import java.util.Collection;
+
 /**
  * Created by busradeniz on 27/12/15.
  */
@@ -15,6 +17,7 @@ public class SignUpResponse {
     private int id;
     private String username;
     private Media photo;
+    private Collection<String> roles;
 
 
     public String getBio() {
@@ -79,5 +82,13 @@ public class SignUpResponse {
 
     public void setPhoto(Media photo) {
         this.photo = photo;
+    }
+
+    public Collection<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<String> roles) {
+        this.roles = roles;
     }
 }

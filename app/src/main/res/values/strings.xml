@@ -122,8 +122,17 @@
         <item>My History</item>
         <item>My Watch List</item>
         <item>Statistics</item>
+    </string-array>
 
-
+    <string-array name="drawler_menu_admin">
+        <item>Home</item>
+        <item>Profile</item>
+        <item>My History</item>
+        <item>My Watch List</item>
+        <item>Statistics</item>
+        <item>Manage Violation Groups</item>
+        <item>Manage Violations</item>
+        <item>Manage Violation Properties</item>
     </string-array>
 
 
