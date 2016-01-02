@@ -1,24 +1,25 @@
 package com.busradeniz.nightswatch.service;
 
 import android.util.Log;
-
 import com.busradeniz.nightswatch.service.fileupload.FileUploadService;
 import com.busradeniz.nightswatch.service.like.LikeService;
 import com.busradeniz.nightswatch.service.login.LoginService;
 import com.busradeniz.nightswatch.service.signup.SignUpService;
 import com.busradeniz.nightswatch.service.user.UserService;
+import com.busradeniz.nightswatch.service.violation.ViolationGroupService;
 import com.busradeniz.nightswatch.service.violation.ViolationService;
 import com.busradeniz.nightswatch.service.watch.WatchService;
 import com.busradeniz.nightswatch.util.Constants;
 import com.busradeniz.nightswatch.util.LoggingInterceptor;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
-import com.squareup.okhttp.*;
-
-import java.io.IOException;
-
+import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
+
+import java.io.IOException;
 
 /**
  * Created by busradeniz on 27/12/15.
@@ -93,6 +94,11 @@ public class ServiceProvider {
     public static ViolationService getViolationService() {
         initializeRetrofitWithInterceptor();
         return retrofitInceptor.create(ViolationService.class);
+    }
+
+    public static ViolationGroupService getViolationGroupService() {
+        initializeRetrofitWithInterceptor();
+        return retrofitInceptor.create(ViolationGroupService.class);
     }
 
     public static FileUploadService getFileUploadService() {

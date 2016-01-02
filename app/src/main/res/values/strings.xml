@@ -158,4 +158,7 @@
 
     <string name="title_activity_splash">Splash</string>
     <string name="manage_violations_title">Manage Violations</string>
+    <string name="detail">Detail</string>
+    <string name="delete">Delete</string>
+    <string name="violation_gorup_list">Violation Groups</string>
 </resources>

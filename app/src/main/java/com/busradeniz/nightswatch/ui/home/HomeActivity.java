@@ -20,6 +20,7 @@ import com.busradeniz.nightswatch.ui.history.HistoryActivityFragment;
 import com.busradeniz.nightswatch.ui.profile.ProfileActivityFragment;
 import com.busradeniz.nightswatch.ui.statistics.StatisticsActivityFragment;
 import com.busradeniz.nightswatch.ui.violation.DisplayViolationFragment;
+import com.busradeniz.nightswatch.ui.violation.ViolationGroupListFragment;
 import com.busradeniz.nightswatch.ui.violationlist.ViolationListFragment;
 import com.busradeniz.nightswatch.ui.watchlist.WatchListActivityFragment;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
@@ -108,6 +109,11 @@ public class HomeActivity extends AppCompatActivity {
         openFragment(violationListForDelete);
     }
 
+    private void openViolationGroupListFragment() {
+        ViolationGroupListFragment violationGroupListFragment = new ViolationGroupListFragment();
+        openFragment(violationGroupListFragment);
+    }
+
     private void openFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, fragment);
@@ -139,7 +145,7 @@ public class HomeActivity extends AppCompatActivity {
         } else if (position == 4) {
             openStatisticsScreen();
         } else if (position == 5) { // Manage Violation Groups
-            Toast.makeText(this.getApplicationContext(), "Redirect to Manage Violation Groups", Toast.LENGTH_LONG).show();
+            openViolationGroupListFragment();
         } else if (position == 6) { // Manage Violations
             openViolationListFragment();
         } else if (position == 7) { // Manage Violation Properties

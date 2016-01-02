@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:background="@color/colorDarkGray"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:background="@color/colorWhite"
+        android:id="@+id/violation_group_name"
+        android:layout_weight=".60"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        android:layout_marginBottom="1dp"
+        android:textColor="@color/colorSecondaryText"/>
+
+    <ImageView
+        android:background="@color/colorWhite"
+        android:id="@+id/violation_group_detail"
+        android:layout_gravity="right"
+        android:src="@android:drawable/ic_menu_edit"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:padding="2dp"
+        android:layout_marginBottom="1dp"
+        android:contentDescription="@string/detail"/>
+
+    <ImageView
+        android:background="@color/colorWhite"
+        android:id="@+id/violation_group_delete"
+        android:layout_gravity="right"
+        android:src="@android:drawable/ic_menu_delete"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:padding="2dp"
+        android:layout_marginBottom="1dp"
+        android:contentDescription="@string/delete"/>
+
+</LinearLayout>

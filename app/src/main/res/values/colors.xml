@@ -7,5 +7,6 @@
     <color name="colorDarkGray">#83939F</color>
     <color name="colorSecondaryText">#333333</color>
     <color name="colorGreen">#80D587</color>
+    <color name="colorWhite">#fff</color>
 
 </resources>
