@@ -81,6 +81,12 @@
     <string name="create_violation_txt_violation_description">Violation Description</string>
     <string name="create_violation_txt_submit">Create Violation</string>
     <string name="create_violation_media_title">Violation Media*</string>
+    <string name="create_violation_violation_status">Violation Status</string>
+
+
+    <!--Edit Violation screen string-->
+    <string name="edit_violation_screen_title">Edit violation</string>
+    <string name="edit_violation_txt_submit">Submit Changes</string>
 
 
     <!--ViolationResponse Location string-->
@@ -99,12 +105,19 @@
     <string name="display_violation_violation_tag">Tags : </string>
 
 
-
-
     <!--History string-->
     <string name="history_page_open_text">Open</string>
     <string name="history_page_fixed_text">Fixed</string>
     <string name="history_page_all_text">All</string>
+
+
+    <string-array name="violation_status_array">
+        <item>NEW</item>
+        <item>IN_PROGRESS</item>
+        <item>FIXED</item>
+        <item>NOT_FIXED</item>
+        <item>NOT_VIOLATION</item>
+    </string-array>
 
 
     <string-array name="danger_level_array">
@@ -113,8 +126,6 @@
         <item>HIGH</item>
     </string-array>
     <string name="title_activity_map">MapActivity</string>
-
-
 
 
     <string-array name="drawler_menu_user">
@@ -161,4 +172,5 @@
     <string name="detail">Detail</string>
     <string name="delete">Delete</string>
     <string name="violation_gorup_list">Violation Groups</string>
+    <string name="title_activity_edit_violation">EditViolationActivity</string>
 </resources>

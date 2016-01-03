@@ -3,6 +3,7 @@ package com.busradeniz.nightswatch.util;
 import android.app.Application;
 import android.content.Context;
 import com.busradeniz.nightswatch.service.signup.SignUpResponse;
+import com.busradeniz.nightswatch.service.violation.ViolationResponse;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.Locale;
@@ -21,6 +22,7 @@ public class NightsWatchApplication extends Application {
     public static double longitude;
     public static SignUpResponse user;
 
+    public static ViolationResponse selectedViolation;
     public static boolean hasRole(String roleName) {
         if (user == null
                 || user.getRoles() == null

@@ -18,7 +18,7 @@
     <application
         android:name=".util.NightsWatchApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/nav_icon"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
@@ -36,8 +36,7 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.signup.SignUpActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -52,6 +51,11 @@
             android:name=".ui.violation.CreateViolationActivity"
             android:label="@string/title_activity_create_violation"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".ui.violation.EditViolationActivity"
+            android:label="@string/title_activity_edit_violation"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
