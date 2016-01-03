@@ -6,6 +6,7 @@ import com.busradeniz.nightswatch.service.like.LikeService;
 import com.busradeniz.nightswatch.service.login.LoginService;
 import com.busradeniz.nightswatch.service.signup.SignUpService;
 import com.busradeniz.nightswatch.service.user.UserService;
+import com.busradeniz.nightswatch.service.violation.ViolationCustomFieldService;
 import com.busradeniz.nightswatch.service.violation.ViolationGroupService;
 import com.busradeniz.nightswatch.service.violation.ViolationService;
 import com.busradeniz.nightswatch.service.watch.WatchService;
@@ -99,6 +100,11 @@ public class ServiceProvider {
     public static ViolationGroupService getViolationGroupService() {
         initializeRetrofitWithInterceptor();
         return retrofitInceptor.create(ViolationGroupService.class);
+    }
+
+    public static ViolationCustomFieldService getViolationCustomFieldService() {
+        initializeRetrofitWithInterceptor();
+        return retrofitInceptor.create(ViolationCustomFieldService.class);
     }
 
     public static FileUploadService getFileUploadService() {

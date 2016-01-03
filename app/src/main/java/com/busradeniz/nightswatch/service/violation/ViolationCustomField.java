@@ -10,6 +10,7 @@ public class ViolationCustomField {
     private String constraintTypeDto;
     private String constraintValue;
     private String description;
+    private int violationGroupId;
 
     public int getId() {
         return id;
@@ -49,5 +50,13 @@ public class ViolationCustomField {
 
     public void setProperty(String property) {
         this.property = property;
+    }
+
+    public int getViolationGroupId() {
+        return violationGroupId;
+    }
+
+    public void setViolationGroupId(int violationGroupId) {
+        this.violationGroupId = violationGroupId;
     }
 }
