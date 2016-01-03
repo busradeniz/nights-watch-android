@@ -3,6 +3,9 @@ package com.busradeniz.nightswatch.ui.violation;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +26,11 @@ public class ViolationGroupDetailFragment extends Fragment {
 
     public static final String VIOLATION_GROUP_ID_PARAM = "violationGroupId";
 
-    @Bind(R.id.test_text)
-    TextView textView;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
+    @Bind(R.id.violation_group_name)
+    TextView violationGroupName;
 
     private int violationGroupId;
     private ViolationGroup violationGroup;
@@ -50,6 +56,12 @@ public class ViolationGroupDetailFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_violation_group_detail, container, false);
         ButterKnife.bind(this, view);
 
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+        ab.setDisplayHomeAsUpEnabled(true);
+        toolbar.setTitle(getString(R.string.violation_gorup_detail));
+
         ServiceProvider.getViolationGroupService().get(violationGroupId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -57,7 +69,7 @@ public class ViolationGroupDetailFragment extends Fragment {
                     @Override
                     public void call(ViolationGroup violationGroup) {
                         ViolationGroupDetailFragment.this.violationGroup = violationGroup;
-                        textView.setText("Hello for violation Group " + violationGroup.getName());
+                        violationGroupName.setText(violationGroup.getName());
                     }
                 });
         return view;

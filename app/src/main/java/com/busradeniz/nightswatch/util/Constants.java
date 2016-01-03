@@ -6,6 +6,6 @@ package com.busradeniz.nightswatch.util;
 public class Constants {
 
     public static String APP_NAME = "nights-watch";
-    public static String BASE_URL ="http://192.168.2.106:8080";
+    public static String BASE_URL ="http://172.20.10.3:8080";
     public static int PASSWORD_LENGTH = 3;
 }

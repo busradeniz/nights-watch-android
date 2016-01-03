@@ -175,4 +175,5 @@
     <string name="violation_group_name">Violation Group Name</string>
     
     <string name="title_activity_edit_violation">EditViolationActivity</string>
+    <string name="violation_gorup_detail">Violation Group Detail</string>
 </resources>
