@@ -176,4 +176,6 @@
     
     <string name="title_activity_edit_violation">EditViolationActivity</string>
     <string name="violation_gorup_detail">Violation Group Detail</string>
+    <string name="field_type">Type</string>
+    <string name="expected_value">Exp. Value</string>
 </resources>
