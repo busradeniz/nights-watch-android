@@ -1,23 +1,29 @@
 package com.busradeniz.nightswatch.ui.violation;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.EditText;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.busradeniz.nightswatch.R;
+import com.busradeniz.nightswatch.service.Response;
 import com.busradeniz.nightswatch.service.ServiceProvider;
 import com.busradeniz.nightswatch.service.violation.ViolationGroup;
+import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -73,7 +79,8 @@ public class ViolationGroupListFragment extends Fragment
         createViolationGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Creating a new Violation Group", Toast.LENGTH_LONG).show();
+                showCreateViolationGroupDialog();
+
             }
         });
 
@@ -95,12 +102,132 @@ public class ViolationGroupListFragment extends Fragment
     }
 
     @Override
-    public void onDetailButtonClicked(ViolationGroup violationGroup) {
-        Toast.makeText(getActivity(), violationGroup.getName() + " detail", Toast.LENGTH_LONG).show();
+    public void onDetailButtonClicked(final ViolationGroup violationGroup) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final EditText input = new EditText(getActivity());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint(R.string.violation_group_name);
+        input.setText(violationGroup.getName());
+
+        TextInputLayout textInputLayout = new TextInputLayout(getActivity());
+        textInputLayout.addView(input);
+        textInputLayout.setHint(getActivity().getResources().getString(R.string.violation_group_name));
+
+        // Set up the input
+        builder.setView(textInputLayout);
+        builder.setTitle("Update Violation Group...");
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                violationGroup.setName(input.getText().toString());
+                ServiceProvider.getViolationGroupService().update(violationGroup.getId(), violationGroup)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<ViolationGroup>() {
+                            @Override
+                            public void call(ViolationGroup violationGroup) {
+                                readViolationGroups();
+                                com.busradeniz.nightswatch.util.AlertDialog.showAlertWithPositiveButton(getActivity(), "Successful!", "Violation Group is updated!");
+                            }
+                        });
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     @Override
-    public void onDeleteButtonClicked(ViolationGroup violationGroup) {
-        Toast.makeText(getActivity(), violationGroup.getName() + " delete", Toast.LENGTH_LONG).show();
+    public void onDeleteButtonClicked(final ViolationGroup violationGroup) {
+        new AlertDialog.Builder(this.getActivity())
+                .setTitle("Deleting Violation....")
+                .setMessage("Selected (" + violationGroup.getName() + ") violation group is going to be deleted. You cannot revert a delete operation!. Are you sure?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        ServiceProvider.getViolationGroupService().delete(violationGroup.getId())
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<Response>() {
+                                    @Override
+                                    public void onCompleted() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        com.busradeniz.nightswatch.util.AlertDialog.showAlertWithPositiveButton(getActivity(), "Error!",
+                                                "Violation Group cannot be deleted! " +
+                                                        "You should first delete or update all the violations with this group");
+                                    }
+
+                                    @Override
+                                    public void onNext(Response response) {
+                                        com.busradeniz.nightswatch.util.AlertDialog.showAlertWithPositiveButton(getActivity(), "Success!",
+                                                "Violation Group is deleted! ");
+                                        readViolationGroups();
+                                    }
+                                });
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
+
+
+    }
+
+    public void showCreateViolationGroupDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        final EditText input = new EditText(getActivity());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint(R.string.violation_group_name);
+
+        TextInputLayout textInputLayout = new TextInputLayout(getActivity());
+        textInputLayout.addView(input);
+        textInputLayout.setHint(getActivity().getResources().getString(R.string.violation_group_name));
+
+        // Set up the input
+        builder.setView(textInputLayout);
+        builder.setTitle("Create Violation Group...");
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final ViolationGroup violationGroup = new ViolationGroup();
+                violationGroup.setName(input.getText().toString());
+                ServiceProvider.getViolationGroupService().create(violationGroup)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<ViolationGroup>() {
+                            @Override
+                            public void call(ViolationGroup violationGroup) {
+                                readViolationGroups();
+                                com.busradeniz.nightswatch.util.AlertDialog.showAlertWithPositiveButton(getActivity(), "Successful!", "Violation Group is created!");
+                            }
+                        });
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 }
