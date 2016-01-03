@@ -1,10 +1,14 @@
 package com.busradeniz.nightswatch.ui.violation;
 
+import android.app.Activity;
+import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -17,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -32,6 +37,7 @@ import com.busradeniz.nightswatch.service.watch.Watch;
 import com.busradeniz.nightswatch.util.CircleTransformation;
 import com.busradeniz.nightswatch.util.Constants;
 import com.busradeniz.nightswatch.util.DateFormatter;
+import com.busradeniz.nightswatch.util.MediaUtil;
 import com.busradeniz.nightswatch.util.NightsWatchApplication;
 import com.squareup.picasso.Picasso;
 
@@ -50,6 +56,9 @@ import rx.schedulers.Schedulers;
  * Created by busradeniz on 29/12/15.
  */
 public class DisplayViolationFragment extends Fragment {
+
+    private static String TAG = "DisplayViolationFragment";
+    private static int RESULT_CODE  =1;
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -85,7 +94,6 @@ public class DisplayViolationFragment extends Fragment {
     ImageView imgFollower;
 
     private ViolationResponse selectedViolation;
-    private static String TAG = "DisplayViolationFragment";
     private Like userLike = null;
     private Watch userWatch = null;
 
@@ -121,34 +129,7 @@ public class DisplayViolationFragment extends Fragment {
             }
         });
 
-        if (selectedViolation != null) {
-            sendGetViolationLikes();
-            sendGetViolationWatches();
-            setViolationImage();
-            display_violation_txt_violation_title.setText(selectedViolation.getTitle());
-            display_violation_txt_violation_group.setText(" " + selectedViolation.getViolationGroupName());
-            display_violation_txt_location.setText(selectedViolation.getAddress());
-            display_violation_txt_date.setText(" " + DateFormatter.dateFormatToString(selectedViolation.getViolationDate()));
-            display_violation_txt_status.setText(" " + selectedViolation.getViolationStatus());
-            display_violation_frequency_level.setText(" " + selectedViolation.getFrequencyLevel());
-            display_violation_danger_level.setText(" " + selectedViolation.getDangerLevel());
-            display_violation_description.setText(selectedViolation.getDescription());
-            txtViolationCommentNumber.setText("" + selectedViolation.getCommentCount());
-            txtViolationFollowerNumber.setText("" + selectedViolation.getUserWatchCount());
-            txtViolationLikeNumber.setText("" + selectedViolation.getUserLikeCount());
-
-            String tag = "";
-            for (int i = 0; i < selectedViolation.getTags().size(); i++) {
-                if (i == 0) {
-                    tag = selectedViolation.getTags().get(i);
-                } else {
-                    tag = tag + ", " + selectedViolation.getTags().get(i);
-                }
-            }
-            display_violation_tags.setText(tag);
-
-        }
-
+        setScreen();
 
         return view;
     }
@@ -160,6 +141,37 @@ public class DisplayViolationFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit:
+                openEditScreen();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
+        return true;
+    }
+
+    private void openEditScreen(){
+        NightsWatchApplication.selectedViolation = selectedViolation;
+        Intent intent = new Intent(getActivity(), EditViolationActivity.class);
+        startActivityForResult(intent, RESULT_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RESULT_CODE) {
+            selectedViolation = NightsWatchApplication.selectedViolation;
+            setScreen();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
 
     private void setViolationImage() {
         for (int i = 0; i < selectedViolation.getMedias().size(); i++) {
@@ -395,6 +407,36 @@ public class DisplayViolationFragment extends Fragment {
                             txtViolationFollowerNumber.setText("" + count);
                         }
                     });
+        }
+    }
+
+    private void setScreen(){
+        if (selectedViolation != null) {
+            sendGetViolationLikes();
+            sendGetViolationWatches();
+            setViolationImage();
+            display_violation_txt_violation_title.setText(selectedViolation.getTitle());
+            display_violation_txt_violation_group.setText(" " + selectedViolation.getViolationGroupName());
+            display_violation_txt_location.setText(selectedViolation.getAddress());
+            display_violation_txt_date.setText(" " + DateFormatter.dateFormatToString(selectedViolation.getViolationDate()));
+            display_violation_txt_status.setText(" " + selectedViolation.getViolationStatus());
+            display_violation_frequency_level.setText(" " + selectedViolation.getFrequencyLevel());
+            display_violation_danger_level.setText(" " + selectedViolation.getDangerLevel());
+            display_violation_description.setText(selectedViolation.getDescription());
+            txtViolationCommentNumber.setText("" + selectedViolation.getCommentCount());
+            txtViolationFollowerNumber.setText("" + selectedViolation.getUserWatchCount());
+            txtViolationLikeNumber.setText("" + selectedViolation.getUserLikeCount());
+
+            String tag = "";
+            for (int i = 0; i < selectedViolation.getTags().size(); i++) {
+                if (i == 0) {
+                    tag = selectedViolation.getTags().get(i);
+                } else {
+                    tag = tag + ", " + selectedViolation.getTags().get(i);
+                }
+            }
+            display_violation_tags.setText(tag);
+
         }
     }
 }

@@ -37,6 +37,11 @@ public interface ViolationService {
     @POST("/nights-watch/violation")
     Observable<ViolationResponse> createNewViolation(@Body CreateViolationRequest createViolationRequest);
 
+
+    @PUT("/nights-watch/violation/{id}")
+    Observable<ViolationResponse> updateViolation(@Path("id") int violationId , @Body CreateViolationRequest createViolationRequest);
+
+
     @POST("/nights-watch/violation/{id}/addMedia")
     Observable<ViolationResponse> addMediaToViolation(@Path("id") int id, @Body Media media);
 
