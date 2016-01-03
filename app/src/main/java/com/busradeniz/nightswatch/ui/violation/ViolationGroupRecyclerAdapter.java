@@ -62,6 +62,10 @@ public class ViolationGroupRecyclerAdapter extends RecyclerView.Adapter<Violatio
         return violationGroups.size();
     }
 
+    public ViolationGroup getItem(int position) {
+        return this.violationGroups.get(position);
+    }
+
     public void setOnViolationGroupButtonsListener(final OnViolationGroupButtonsListener onViolationGroupButtonsListener) {
         listenerWeakReference = new WeakReference<OnViolationGroupButtonsListener>(onViolationGroupButtonsListener);
     }

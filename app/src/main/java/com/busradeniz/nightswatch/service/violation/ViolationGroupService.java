@@ -17,6 +17,9 @@ public interface ViolationGroupService {
     @DELETE("/nights-watch/violationGroup/{id}")
     Observable<Response> delete(@Path("id") int id);
 
+    @GET("/nights-watch/violationGroup/{id}")
+    Observable<ViolationGroup> get(@Path("id") int id);
+
     @PUT("/nights-watch/violationGroup/{id}")
     Observable<ViolationGroup> update(@Path("id") int id, @Body ViolationGroup violationGroup);
 }

@@ -162,4 +162,7 @@
     <string name="delete">Delete</string>
     <string name="violation_gorup_list">Violation Groups</string>
     <string name="violation_group_name">Violation Group Name</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -23,6 +23,8 @@ import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.Response;
 import com.busradeniz.nightswatch.service.ServiceProvider;
 import com.busradeniz.nightswatch.service.violation.ViolationGroup;
+import com.busradeniz.nightswatch.ui.home.HomeActivity;
+import com.busradeniz.nightswatch.util.RecyclerItemTouchToClickListener;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -75,6 +77,13 @@ public class ViolationGroupListFragment extends Fragment
         violationGroupRecyclerView.setItemAnimator(new DefaultItemAnimator());
         violationGroupRecyclerView.setHasFixedSize(true);
         violationGroupRecyclerView.setAdapter(violationGroupRecyclerAdapter);
+
+        violationGroupRecyclerView.addOnItemTouchListener(new RecyclerItemTouchToClickListener(getActivity()) {
+            @Override
+            public void onClick(View view, int position) {
+                toDetailFragment(violationGroupRecyclerAdapter.getItem(position).getId());
+            }
+        });
 
         createViolationGroup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,5 +238,13 @@ public class ViolationGroupListFragment extends Fragment
         });
 
         builder.show();
+    }
+
+    public HomeActivity getHomeActivity() {
+        return (HomeActivity) getActivity();
+    }
+
+    public void toDetailFragment(int violationGroupId) {
+        getHomeActivity().openViolationGroupDetailFragment(violationGroupId);
     }
 }

@@ -20,6 +20,7 @@ import com.busradeniz.nightswatch.ui.history.HistoryActivityFragment;
 import com.busradeniz.nightswatch.ui.profile.ProfileActivityFragment;
 import com.busradeniz.nightswatch.ui.statistics.StatisticsActivityFragment;
 import com.busradeniz.nightswatch.ui.violation.DisplayViolationFragment;
+import com.busradeniz.nightswatch.ui.violation.ViolationGroupDetailFragment;
 import com.busradeniz.nightswatch.ui.violation.ViolationGroupListFragment;
 import com.busradeniz.nightswatch.ui.violationlist.ViolationListFragment;
 import com.busradeniz.nightswatch.ui.watchlist.WatchListActivityFragment;
@@ -125,6 +126,14 @@ public class HomeActivity extends AppCompatActivity {
         DisplayViolationFragment displayViolationFragment = new DisplayViolationFragment();
         displayViolationFragment.setSelectedViolation(violationResponse);
         openFragment(displayViolationFragment);
+    }
+
+    public void openViolationGroupDetailFragment(final int violationGroupId) {
+        ViolationGroupDetailFragment fragment = new ViolationGroupDetailFragment();
+        final Bundle args = new Bundle();
+        args.putInt(ViolationGroupDetailFragment.VIOLATION_GROUP_ID_PARAM, violationGroupId);
+        fragment.setArguments(args);
+        openFragment(fragment);
     }
 
     /**
