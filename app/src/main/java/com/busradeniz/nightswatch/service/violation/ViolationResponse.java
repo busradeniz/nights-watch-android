@@ -165,4 +165,12 @@ public class ViolationResponse {
     public void setMedias(List<Media> medias) {
         this.medias = medias;
     }
+
+    public String getCustomProperties() {
+        return customProperties;
+    }
+
+    public void setCustomProperties(String customProperties) {
+        this.customProperties = customProperties;
+    }
 }

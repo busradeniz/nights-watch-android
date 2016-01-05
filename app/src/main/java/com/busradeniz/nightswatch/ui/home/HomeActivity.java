@@ -105,7 +105,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void openViolationListFragment() {
         ViolationListFragment violationListForDelete = new ViolationListFragment();
-        violationListForDelete.setListType(getString(R.string.history_page_open_text), this);
+        violationListForDelete.setListType(getString(R.string.history_page_all_text), this);
         violationListForDelete.setOperationType(ViolationListFragment.OperationType.DELETE);
         openFragment(violationListForDelete);
     }

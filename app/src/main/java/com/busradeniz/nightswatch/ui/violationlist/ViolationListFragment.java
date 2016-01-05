@@ -159,10 +159,13 @@ public class ViolationListFragment extends Fragment {
         } else if (listType.equals(getString(R.string.history_page_fixed_text))) {
             sendGetMyFixedListRequest();
         } else if (listType.equals(getString(R.string.history_page_all_text))) {
-            sendGetMyFixedListRequest();
+            sendGetRecentViolationListRequest();
         }
 
     }
+
+
+
 
     private void sendGetNearbyViolationListRequest() {
         showProgress();

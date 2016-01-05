@@ -59,23 +59,21 @@ public class StatisticsActivityFragment extends Fragment {
     private void addChart(View view) {
 
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(4f, 0));
+        entries.add(new BarEntry(13f, 0));
         entries.add(new BarEntry(8f, 1));
-        entries.add(new BarEntry(6f, 2));
-        entries.add(new BarEntry(12f, 3));
-        entries.add(new BarEntry(18f, 4));
-        entries.add(new BarEntry(9f, 5));
+        entries.add(new BarEntry(2f, 2));
+        entries.add(new BarEntry(6f, 3));
+        entries.add(new BarEntry(9f, 4));
 
-        BarDataSet dataset = new BarDataSet(entries, "# of Calls");
+        BarDataSet dataset = new BarDataSet(entries, "# of Violations");
         dataset.setColors(ColorTemplate.COLORFUL_COLORS);
 
         ArrayList<String> labels = new ArrayList<String>();
-        labels.add("January");
-        labels.add("February");
-        labels.add("March");
-        labels.add("April");
-        labels.add("May");
-        labels.add("June");
+        labels.add("New");
+        labels.add("Not Violation");
+        labels.add("Fixed");
+        labels.add("In Progress");
+        labels.add("Not Fixed");
 
 
         BarChart chart = (BarChart) view.findViewById(R.id.chart);

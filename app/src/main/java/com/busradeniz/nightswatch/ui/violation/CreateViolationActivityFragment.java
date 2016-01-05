@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,12 +22,15 @@ import android.text.Html;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
 import com.busradeniz.nightswatch.R;
 import com.busradeniz.nightswatch.service.ServiceProvider;
 import com.busradeniz.nightswatch.service.fileupload.Media;
 import com.busradeniz.nightswatch.service.violation.CreateViolationRequest;
+import com.busradeniz.nightswatch.service.violation.ViolationCustomField;
 import com.busradeniz.nightswatch.service.violation.ViolationGroup;
 import com.busradeniz.nightswatch.service.violation.ViolationResponse;
 import com.busradeniz.nightswatch.util.AlertDialog;
@@ -37,6 +41,9 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
+
+import org.json.JSONObject;
+
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -49,6 +56,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -61,6 +69,9 @@ public class CreateViolationActivityFragment extends Fragment {
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static final int PLACE_PICKER_REQUEST = 3;
     private static String TAG = "CreateViolationActivityFragment";
+
+    private ArrayList<EditText> customFieldTextViews = new ArrayList<>();
+    private ArrayList<CheckBox> customFieldCheckBoxes = new ArrayList<>();
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -90,6 +101,7 @@ public class CreateViolationActivityFragment extends Fragment {
 
     private ArrayList<Uri> mediaListUri;
     private List<ViolationGroup> violationGroupList;
+    private ViolationGroup selectedViolationGroup;
     private String[] violationGroupSpinnerList;
     private CreateViolationRequest violationRequest;
     private String[] dangerLevelList;
@@ -102,8 +114,7 @@ public class CreateViolationActivityFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_violation, container, false);
         ButterKnife.bind(this, view);
 
@@ -325,7 +336,9 @@ public class CreateViolationActivityFragment extends Fragment {
             spinner_violation_group.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    selectedViolationGroup = violationGroupList.get(position);
                     violationRequest.setViolationGroupName(violationGroupList.get(position).getName());
+                    setCustomFieldView();
                 }
 
                 @Override
@@ -336,8 +349,57 @@ public class CreateViolationActivityFragment extends Fragment {
 
             // set default 0
             violationRequest.setViolationGroupName(violationGroupList.get(0).getName());
+            selectedViolationGroup = violationGroupList.get(0);
+            setCustomFieldView();
         }
     }
+
+    private void setCustomFieldView() {
+
+        llCustomViolationBase.removeAllViews();
+        customFieldCheckBoxes.clear();
+        customFieldTextViews.clear();
+
+
+        for (int i = 0; i < selectedViolationGroup.getViolationPropertyDtos().size(); i++) {
+            ViolationCustomField violationCustomField = selectedViolationGroup.getViolationPropertyDtos().get(i);
+
+            if (!violationCustomField.getConstraintTypeDto().equals("BOOL")) {
+                LinearLayout llCustomField = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.violation_custom_edittext, null);
+                TextView textView = (TextView) llCustomField.findViewById(R.id.custom_violation_text_title);
+                textView.setText(violationCustomField.getDescription() + " should be " + violationCustomField.getConstraintTypeDto() + " " + violationCustomField.getConstraintValue());
+                EditText textInputLayout = (EditText) llCustomField.findViewById(R.id.custom_violation_text);
+                textInputLayout.setHint(violationCustomField.getDescription());
+                textInputLayout.setTag(violationCustomField);
+                customFieldTextViews.add(textInputLayout);
+                llCustomViolationBase.addView(llCustomField);
+            }
+        }
+
+        for (int i = 0; i < selectedViolationGroup.getViolationPropertyDtos().size(); i++) {
+            ViolationCustomField violationCustomField = selectedViolationGroup.getViolationPropertyDtos().get(i);
+
+            if (violationCustomField.getConstraintTypeDto().equals("BOOL")) {
+                LinearLayout llCustomField = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.violation_custom_checkbox, null);
+                TextView textView = (TextView) llCustomField.findViewById(R.id.custom_violation_text_title);
+                if (violationCustomField.getConstraintValue().equals("false")) {
+                    textView.setText(violationCustomField.getDescription() + " should be off");
+                } else {
+                    textView.setText(violationCustomField.getDescription() + " should be on");
+                }
+
+                CheckBox checkBox = (CheckBox) llCustomField.findViewById(R.id.checkbox_violation_custom);
+                checkBox.setText(violationCustomField.getDescription());
+                checkBox.setTag(violationCustomField);
+                customFieldCheckBoxes.add(checkBox);
+                llCustomViolationBase.addView(llCustomField);
+            }
+
+
+        }
+
+    }
+
 
     private void showProgress() {
         progressDialog = ProgressDialog.show(getActivity(), getResources().getString(R.string.progress_title_text), getResources().getString(R.string.progress_message_text), true);
@@ -428,6 +490,32 @@ public class CreateViolationActivityFragment extends Fragment {
             String[] tags = create_violation_txt_tag.getText().toString().split(",");
             violationRequest.setTags(tags);
         }
+
+
+        Map<String, Object> customFieldMap = new HashMap<String, Object>();
+        for (int i = 0; i < customFieldTextViews.size(); i++) {
+            EditText editText = customFieldTextViews.get(i);
+            ViolationCustomField violationCustomField = (ViolationCustomField) editText.getTag();
+            customFieldMap.put(violationCustomField.getProperty(), editText.getText().toString());
+        }
+
+        for (int i = 0; i < customFieldCheckBoxes.size(); i++) {
+            CheckBox checkBox = customFieldCheckBoxes.get(i);
+            ViolationCustomField violationCustomField = (ViolationCustomField) checkBox.getTag();
+            if (checkBox.isChecked()){
+                customFieldMap.put(violationCustomField.getProperty(), "true");
+            }else {
+                customFieldMap.put(violationCustomField.getProperty(), "false");
+            }
+        }
+
+
+
+
+        JSONObject json = new JSONObject(customFieldMap);
+        violationRequest.setCustomProperties(json.toString());
+        Log.i(TAG, "violation custom fields : " + json.toString());
+
 
         //send create violation requests
         ServiceProvider.getViolationService().createNewViolation(violationRequest)
